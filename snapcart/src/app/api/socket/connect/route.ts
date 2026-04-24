@@ -1,0 +1,18 @@
+import User from "@/models/user.models";
+import { NextResponse } from "next/server";
+
+export async function POST(req:NextResponse){
+    try{
+        const {userId, socketId}=await req.json()
+        const user = await User.findByIdAndUpdate(userId,{
+            socketId,
+            isOnline:true
+        },{new:true})
+        if(!user){
+            return NextResponse.json({message:"user not found"},{status:400})
+        }
+        return NextResponse.json({success:true},{status:200})
+    }catch(error){
+        return NextResponse.json({success:false},{status:500})
+    }
+}

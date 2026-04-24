@@ -1,0 +1,92 @@
+"use client"
+import React from 'react'
+import { motion } from "motion/react"
+import { ArrowRight, Bike, ShoppingBasket } from 'lucide-react'
+type propType={
+  nextStep:(s:number)=>void
+}
+
+function Welcome({nextStep}:propType) {
+  return (
+    <div className='flex flex-col items-center justify-center min-h-screen text-center p-6 bg-linear-to-b from-green-50 to-white'>
+      <motion.div
+      initial={{
+        opacity:0,
+        y:20
+      }}
+      animate={{
+        opacity:1,
+        y:0
+      }}
+      transition={{
+        duration:2
+      }}
+      className='flex items-center gap-3'
+      >
+        <h1 className='text-4xl md:text-5xl font-extrabold text-orange-600'>
+          SwiftPick</h1>
+          <ShoppingBasket className='w-10 h-10 text-orange-600'/>
+        </motion.div>
+        <motion.p 
+        initial={{
+        opacity:0,
+        y:20
+      }}
+      animate={{
+        opacity:1,
+        scale:1
+      }}
+      transition={{
+        duration:0.6,
+        delay:0.3
+      }}
+      className='mt-4 text-gray-700 text-lg md:text-xl max-w-lg'
+        >
+          Your one-stop destinartion for fresh greoceries,
+           organic products, and daliy essentials delivered right to your doorstop.
+        </motion.p>
+
+        <motion.div
+          initial={{
+        opacity:0,
+        scale:0.9
+      }}
+      animate={{
+        opacity:1,
+        scale:1
+      }}
+      transition={{
+        duration:0.6,
+        delay:0.5
+      }}
+      className='flex items-center justify-center gap-10 mt-10'
+        >
+          <ShoppingBasket className='w-24 h-24 md:w-32 md:h-24 text-orange-600'/>
+          <Bike className='w-24 h-24 md:w-32 md:h-24 text-orange-600'/>
+        </motion.div>
+
+        <motion.button
+          initial={{
+        opacity:0,
+        y:20
+      }}
+      animate={{
+        opacity:1,
+        scale:1
+      }}
+      transition={{
+        duration:0.6,
+        delay:0.8
+      }}
+      className='inline-flex items-center gap-2 bg-orange-600 hover:bg-orange-500 text-white font-semibold py-3 px-8 rounded-2xl shadow-md transition-all duration-200 mt-10'
+      onClick={()=>nextStep(2)}
+      >
+      Next
+      <ArrowRight/>
+
+        </motion.button>
+    </div>
+  )
+}
+
+export default Welcome
