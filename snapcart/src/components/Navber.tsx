@@ -123,10 +123,22 @@ function Navber({user}:{user:IUser}) {
       </>}
 
     <div className='relative' ref={ProfileDropDown}>
-    <div className='bg-white rounded-full  w-11 h-11 flex items-center justify-center overflow-hidden shadow-md hover:scale-105 transition-transform '
-    onClick={()=>setOpen(prev=>!prev)}>
-      {user.image?<Image src={user.image} alt='user' fill className='object-cover rounded-full'/>:<User/>}
-    </div>
+   <div 
+  className='relative bg-white rounded-full w-11 h-11 flex items-center justify-center overflow-hidden shadow-md hover:scale-105 transition-transform cursor-pointer'
+  onClick={() => setOpen(prev => !prev)}
+>
+  {user.image ? (
+    <Image 
+      src={user.image} 
+      alt='user' 
+      fill 
+      sizes="44px" // যেহেতু উইথ ১১ (১১*৪ = ৪৪ পিক্সেল), তাই এটি ফিক্সড ভ্যালু দিলে ভালো
+      className='object-cover rounded-full'
+    />
+  ) : (
+    <User />
+  )}
+</div>
     <AnimatePresence>
       {open && <motion.div
       initial={{opacity:0, y: -10, scale: 0.95 }} 
@@ -137,7 +149,7 @@ function Navber({user}:{user:IUser}) {
       >
         <div className='flex items-center gap-3 px-3 py-2 border-gray-100'>
           <div className='w-10 h-10 rounded-full bg-amber-300 flex items-center relative justify-center overflow-hidden'>
-             {user.image?<Image src={user.image} alt='user' fill className='object-cover rounded-full'/>:<User/>}
+             {user.image?<Image src={user.image} alt='user'sizes="44px" fill className='object-cover rounded-full'/>:<User/>}
           </div>
           <div>
             <div className='text-gray-800 font-semibold'>{user.name}</div>

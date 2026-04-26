@@ -1,7 +1,5 @@
 import mongoose from "mongoose";
 
-
-
 export interface IOrder{
     _id:mongoose.Types.ObjectId
     user:mongoose.Types.ObjectId

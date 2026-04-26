@@ -25,12 +25,14 @@ async function Home() {
   }
   const inComplete=!user.mobile || !user.role || (!user.mobile && user.
     role=="user")
+    console.log(inComplete)
     if(inComplete){
+      
       return<EditRoleMobile/>
     }
     const plainUser=JSON.parse(JSON.stringify(user))
-    console.log(plainUser)
-    console.log(user)
+    // console.log(plainUser)
+    // console.log(user)
   return (
     <>
       <Navber user={plainUser}/>

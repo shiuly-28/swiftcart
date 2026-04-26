@@ -30,17 +30,21 @@ export async function POST(req:NextRequest,{params}:{params:{orderId:string}}){
                     }
                 }
             })
+            console.log(nearByDeliveryBoys)
+
             const nearByIds=nearByDeliveryBoys.map((b)=>b._id)
+            // console.log(nearByIds)
             const busyIds=await DeliveryAssigment.find({
                 assignedTo:{$in:nearByIds},
-                status:{$nin:["brodcasted", "assigned", "completed"]}
+                status:{$nin:["brodcasted", "completed"]}
             }).distinct("assignedTo")
+            console.log(busyIds)
             const busyIdSet=new Set(busyIds.map(b=>String(b)))
             const availableDeliveryBoys=nearByDeliveryBoys.filter(
                 b=>!busyIdSet.has(String(b._id))
             )
             const candidates=availableDeliveryBoys.map(b=>b._id)
-            if(candidates.length==0){
+            if(candidates.length == 0){
                 await order.save()
                 return NextResponse.json(
                 {message:"There is no available Delivery Boys"},
@@ -50,7 +54,7 @@ export async function POST(req:NextRequest,{params}:{params:{orderId:string}}){
 
             const deliveryAssigment=await DeliveryAssigment.create({
                 order: order._id,
-                brodcastedTo:candidates,
+                broadcastedTo:candidates,
                 status:"brodcasted"
             })
             order.assignment=deliveryAssigment._id,
@@ -61,7 +65,9 @@ export async function POST(req:NextRequest,{params}:{params:{orderId:string}}){
             latitude:b.location.coordinates[1],
             longitude:b.location.coordinates[0]
            }))
+           await deliveryAssigment.populate("order")
         }
+        
         await order.save()
         await order.populate("user")
 
@@ -72,6 +78,6 @@ export async function POST(req:NextRequest,{params}:{params:{orderId:string}}){
     }catch(error){
           return NextResponse.json({
            message:`updatde status error ${error}`
-        },{status:200})
+        },{status:500})
     }
 }

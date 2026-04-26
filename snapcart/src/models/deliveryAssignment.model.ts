@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 interface IDeliveryAssigment{
     _id:mongoose.Types.ObjectId
     order:mongoose.Types.ObjectId
-    bordcastedTo:mongoose.Types.ObjectId[]
+    broadcastedTo:mongoose.Types.ObjectId[]
     assignedTo:mongoose.Types.ObjectId | null
     status:"brodcasted" | "assigned" | "completed"
     acceptedAt:Date
@@ -17,7 +17,7 @@ const deliveryAssignmentSchema=new mongoose.Schema<IDeliveryAssigment>({
         type:mongoose.Schema.Types.ObjectId,
         ref:"Order"
     },
-    bordcastedTo:[
+    broadcastedTo:[
         {
             type:mongoose.Schema.Types.ObjectId,
             ref:"User"
