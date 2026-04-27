@@ -4,15 +4,15 @@ import React, { useEffect } from 'react'
 
 function DeliveryBoyDashboard() {
   useEffect(()=>{
-   const fetchAssignment=async ()=>{
+   const fetchAssignments=async ()=>{
      try{
-      const result = await axios.get("/api/deliveryBoy/get-assignment")
+      const result = await axios.get("/api/delivery/get-assignments")
       console.log(result)
     }catch(error){
 
     }
    }
-   fetchAssignment()
+   fetchAssignments()
   },[])
   return (
     <div>

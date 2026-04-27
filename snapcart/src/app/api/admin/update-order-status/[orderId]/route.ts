@@ -1,5 +1,5 @@
 import connectDb from "@/lib/db";
-import DeliveryAssigment from "@/models/deliveryAssignment.model";
+import DeliveryAssignment from "@/models/deliveryAssignment.model";
 import Order from "@/models/order.model";
 import User from "@/models/user.models";
 import { NextRequest, NextResponse } from "next/server";
@@ -34,7 +34,7 @@ export async function POST(req:NextRequest,{params}:{params:{orderId:string}}){
 
             const nearByIds=nearByDeliveryBoys.map((b)=>b._id)
             // console.log(nearByIds)
-            const busyIds=await DeliveryAssigment.find({
+            const busyIds=await DeliveryAssignment.find({
                 assignedTo:{$in:nearByIds},
                 status:{$nin:["brodcasted", "completed"]}
             }).distinct("assignedTo")
@@ -52,12 +52,12 @@ export async function POST(req:NextRequest,{params}:{params:{orderId:string}}){
             )
             }
 
-            const deliveryAssigment=await DeliveryAssigment.create({
+            const deliveryAssignment=await DeliveryAssignment.create({
                 order: order._id,
                 broadcastedTo:candidates,
-                status:"brodcasted"
+                status:"broadcasted"
             })
-            order.assignment=deliveryAssigment._id,
+            order.assignment=deliveryAssignment._id,
            deliveryBoysPayload=availableDeliveryBoys.map(b=>({
             id:b._id,
             name:b.name,
@@ -65,7 +65,7 @@ export async function POST(req:NextRequest,{params}:{params:{orderId:string}}){
             latitude:b.location.coordinates[1],
             longitude:b.location.coordinates[0]
            }))
-           await deliveryAssigment.populate("order")
+           await deliveryAssignment.populate("order")
         }
         
         await order.save()
