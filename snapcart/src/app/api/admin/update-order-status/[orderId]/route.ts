@@ -36,7 +36,7 @@ export async function POST(req:NextRequest,{params}:{params:{orderId:string}}){
             // console.log(nearByIds)
             const busyIds=await DeliveryAssignment.find({
                 assignedTo:{$in:nearByIds},
-                status:{$nin:["brodcasted", "completed"]}
+                status:{$nin:["broadcasted", "completed"]}
             }).distinct("assignedTo")
             console.log(busyIds)
             const busyIdSet=new Set(busyIds.map(b=>String(b)))
