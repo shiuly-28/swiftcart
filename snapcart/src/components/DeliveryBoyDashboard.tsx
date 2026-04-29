@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 
 function DeliveryBoyDashboard() {
   const [assignments, setAssignments] = useState<any[]>([])
+  console.log(assignments)
   useEffect(()=>{
    const fetchAssignments=async ()=>{
      try{
