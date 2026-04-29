@@ -2,7 +2,6 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 
-
 function DeliveryBoyDashboard() {
   const [assignments, setAssignments] = useState<any[]>([])
   useEffect(()=>{
@@ -11,7 +10,7 @@ function DeliveryBoyDashboard() {
       const result = await axios.get("/api/delivery/get-assignments")
         setAssignments(result.data)
     }catch(error){
-
+      console.log(error)
     }
    }
    fetchAssignments()
@@ -24,6 +23,12 @@ function DeliveryBoyDashboard() {
           assignments?.map(a=>(
            <div key={a._id} className='p-5 bg-white rounded-xl shadow mb-4 border'>
             <p><b>Order id</b> #{a?.order?._id?.slice(-6)}</p>
+            <p className='text-gray-600'>{a.order.address.fullAddress}</p>
+            
+            <div className='flex gap-3 mt-4'>
+              <button className='flex-1 bg-amber-500 text-white py-2 rounded-lg'>Accept</button>
+              <button className='flex-1 bg-red-500 text-white py-2 rounded-lg'>Reject</button>
+            </div>
            </div>
           ))
         }

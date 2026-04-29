@@ -3,9 +3,9 @@ import mongoose from "mongoose";
 export interface IDeliveryAssignment{
     _id:mongoose.Types.ObjectId
     order:mongoose.Types.ObjectId
-    broadcastedTo:mongoose.Types.ObjectId[]
+    brodcastedTo:mongoose.Types.ObjectId[]
     assignedTo:mongoose.Types.ObjectId | null
-    status:"broadcasted" | "assigned" | "completed"
+    status:"brodcasted" | "assigned" | "completed"
     acceptedAt:Date
     createdAt?:Date
     updatedAt?:Date
@@ -17,7 +17,7 @@ const deliveryAssignmentSchema=new mongoose.Schema<IDeliveryAssignment>({
         type:mongoose.Schema.Types.ObjectId,
         ref:"Order"
     },
-    broadcastedTo:[
+    brodcastedTo:[
         {
             type:mongoose.Schema.Types.ObjectId,
             ref:"User"
@@ -29,8 +29,8 @@ const deliveryAssignmentSchema=new mongoose.Schema<IDeliveryAssignment>({
     },
     status:{
         type:String,
-        enum:["broadcasted", "assigned", "completed"],
-        default:"broadcasted"
+        enum:["brodcasted", "assigned", "completed"],
+        default:"brodcasted"
     },
     acceptedAt:{
          type:Date

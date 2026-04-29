@@ -61,8 +61,15 @@ function AdminOrderCard({order}:{order:IOrder}) {
             </div>
             <p className='flex gap-3 mt-3 items-center text-sm text-gray-600'>
                     <CreditCard size={16} className='text-amber-500'/>
-                    <span>{order.paymentMethod==="cod"?"Cash On Delivery":"Online Payment"}</span>
+                    <span>{order.paymentMethod === "cod" ? "Cash On Delivery" : "Online Payment"}</span>
                 </p>
+
+                {
+                  order.assigneDeliveryBoy && <div className='mt-4 bg-amber-50 border
+                   border-amber-200 rounded-xl p-5 flex items-center justify-between'>
+
+                  </div>
+                }
         </div>
         <div className='flex flex-col items-start md:items-end gap-2'>
             <span className={`textt-xs font-semibold px-3 py-1 rounded-full capitalize ${

@@ -9,7 +9,7 @@ import { useSession } from 'next-auth/react';
 
 function EditRoleMobile() {
   const [roles, setRoles]=useState([
-    {id:"admin", label:"admin", icon:UserCog},
+    {id:"admin", label:"Admin", icon:UserCog},
     {id:"user", label:"User", icon:User},
     {id:"deliveryBoy", label:"Delivery Boy", icon:Bike},
   ])
@@ -18,6 +18,7 @@ function EditRoleMobile() {
   const [mobile, setMobile] = useState("")
   const {update} = useSession()
   const router = useRouter()
+
  const handleEdit = async () => {
   try {
     const result = await axios.post("/api/auth/user/edit-role-mobile", {
