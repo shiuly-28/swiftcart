@@ -1,13 +1,16 @@
 "use client"
 import {motion} from 'motion/react'
 import { IOrder } from '@/models/order.model'
-import React, { useState } from 'react'
-import { ChevronDown, ChevronUp, ChevronUpIcon, CreditCard, MapPin, Package, Truck } from 'lucide-react'
+import React, { useEffect, useState } from 'react'
+import { ChevronDown, ChevronUp, CreditCard, MapPin, Package, Truck } from 'lucide-react'
 import { div } from 'motion/react-client'
 import Image from 'next/image'
+import { getSocket } from '@/lib/socket'
 
 function UserOrderCard({order}:{order:IOrder}) {
   const [expanded, setExpended]=useState(false)
+  const [status, setStatus] = useState(order.status)
+
   const getStatusColor=(status:string)=>{
     switch (status) {
       case "pending":
@@ -21,6 +24,15 @@ function UserOrderCard({order}:{order:IOrder}) {
         return "bg-gray-100 text-600 border-gray-300"
     }
   }
+
+  useEffect(():any=>{
+const socket=getSocket()
+socket.on("order-status-update", (data)=>{
+if(data.orderId.toString()==order?._id!.toString()){
+  setStatus(data.status)
+}
+})
+  },[])
   return (
     <motion.div 
     initial={{opacity:0, y:15}}
@@ -45,9 +57,9 @@ function UserOrderCard({order}:{order:IOrder}) {
             {order.isPaid?"Paid":"unpaid"}
           </span>
           <span className={`px-3 py-1 text-xs font-semibold border rounded-full ${getStatusColor(
-            order.status
+            status
           )}`}>
-            {order.status}
+            {status}
           </span>
         </div>
 
@@ -113,7 +125,7 @@ function UserOrderCard({order}:{order:IOrder}) {
          <div className='border-t pt-3 flex justify-between items-center text-sm font-semibold text-gray-300'>
           <div className="flex gap-3">
             <Truck className='text-amber-500 mt-1' size={16}/>
-              <span className='text-gray-500'> Delivery: <span className='text-amber-500'>{order.status}</span></span>
+              <span className='text-gray-500'> Delivery: <span className='text-amber-500'>{status}</span></span>
           </div>
           <div className="text-gray-700">
             Total: <span className='text-amber-500'>{order.totalAmount}</span>
