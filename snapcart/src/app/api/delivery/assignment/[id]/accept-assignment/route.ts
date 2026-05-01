@@ -24,7 +24,7 @@ export async function GET(req:NextRequest,{params}:{params: {id:string}}){
 
         const alreadyAssigned=await DeliveryAssignment.findOne({
             assignedTo:deliveryBoyId,
-            status:{$in:["brodcasted", "completed"]}
+            status:{$nin:["brodcasted", "completed"]}
         })
 
         if(alreadyAssigned){
@@ -43,7 +43,19 @@ export async function GET(req:NextRequest,{params}:{params: {id:string}}){
         order.assignedDeliveryBoy=deliveryBoyId
         await order.save()
 
-    }catch(error){
+        await DeliveryAssignment.updateMany(
+            {_id:{$ne:assignment._id},
+            brodcastedTo:deliveryBoyId,
+            status:"brodcasted"
+        },
+        {
+            $pull:{brodcastedTo:deliveryBoyId}
+        }
+        )
 
+        return NextResponse.json({message:"order accepted successfully"}, {status:200})
+
+    }catch(error){
+        return NextResponse.json({message:"accept assignment error ${error}"}, {status:500})
     }
 }

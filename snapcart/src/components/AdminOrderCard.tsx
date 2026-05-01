@@ -2,7 +2,7 @@
 import { IOrder } from '@/models/order.model'
 import React, { useState } from 'react'
 import {motion} from 'motion/react'
-import { ChevronDown, ChevronUp, CreditCard, MapPin, Package, Phone, Truck, User } from 'lucide-react'
+import { ChevronDown, ChevronUp, CreditCard, MapPin, Package, Phone, Truck, User, UserCheck } from 'lucide-react'
 import Image from 'next/image'
 import axios from 'axios'
 
@@ -67,7 +67,9 @@ function AdminOrderCard({order}:{order:IOrder}) {
                 {
                   order.assigneDeliveryBoy && <div className='mt-4 bg-amber-50 border
                    border-amber-200 rounded-xl p-5 flex items-center justify-between'>
-
+                    <div className='flex items-center gap-3 text-sm text-gray-700'>
+                      <UserCheck/>
+                    </div>
                   </div>
                 }
         </div>
