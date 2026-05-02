@@ -27,7 +27,7 @@ export interface IOrder{
         longitude:number
     }
     assignment?:mongoose.Schema.Types.ObjectId
-    assigneDeliveryBoy?:mongoose.Types.ObjectId
+    assignedDeliveryBoy?:mongoose.Types.ObjectId
     status:"pending" | "out of delivery" | "delivered",
     createdAt?:Date
     updated?:Date
@@ -78,7 +78,7 @@ const orderSchema=new mongoose.Schema<IOrder>({
         ref:"DeliveryAssignment",
         default:null
     },
-    assigneDeliveryBoy:{
+    assignedDeliveryBoy:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"User"
     },

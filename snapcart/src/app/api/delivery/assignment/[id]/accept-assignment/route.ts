@@ -56,6 +56,6 @@ export async function GET(req:NextRequest,{params}:{params: {id:string}}){
         return NextResponse.json({message:"order accepted successfully"}, {status:200})
 
     }catch(error){
-        return NextResponse.json({message:"accept assignment error ${error}"}, {status:500})
+        return NextResponse.json({message:`accept assignment error ${error}`}, {status:500})
     }
 }

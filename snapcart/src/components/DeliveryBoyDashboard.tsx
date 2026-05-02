@@ -47,7 +47,7 @@ function DeliveryBoyDashboard() {
             
             <div className='flex gap-3 mt-4'>
               <button className='flex-1 bg-amber-500 text-white py-2 rounded-lg'
-              onClick={()=> handleAccept(a?._id)}
+              onClick={()=> handleAccept(a._id)}
               >Accept</button>
               <button className='flex-1 bg-red-500 text-white py-2 rounded-lg'>Reject</button>
             </div>

@@ -1,12 +1,51 @@
 "use client"
-import { IOrder } from '@/models/order.model'
+
 import React, { useState } from 'react'
 import {motion} from 'motion/react'
 import { ChevronDown, ChevronUp, CreditCard, MapPin, Package, Phone, Truck, User, UserCheck } from 'lucide-react'
 import Image from 'next/image'
 import axios from 'axios'
+import mongoose from 'mongoose'
+import { IUser } from '@/models/user.models'
+
+interface IOrder {
+  _id: mongoose.Types.ObjectId;
+  user: mongoose.Types.ObjectId;
+  items: [
+    {
+      grocery: mongoose.Types.ObjectId;
+      name: string;
+      price: string;
+      unit: string;
+      image: string;
+      quantity: number;
+    }
+  ];
+  isPaid: boolean;
+  totalAmount: number;
+  paymentMethod: "cod" | "online";
+  address: {
+    fullName: string;
+    mobile: string;
+    city: string;
+    state: string;
+    pincode: string;
+    fullAddress: string;
+    latitude: number;
+    longitude: number;
+  };
+  
+  // পপুলেট হলে IUser পাবে, না হলে ObjectId থাকবে
+  assignment?: mongoose.Types.ObjectId | any; 
+  assignedDeliveryBoy?: IUser | mongoose.Types.ObjectId | any; 
+  
+  status: "pending" | "out of delivery" | "delivered";
+  createdAt?: Date;
+  updated?: Date;
+}
 
 function AdminOrderCard({order}:{order:IOrder}) {
+  console.log("Delivery Boy in UI:", order.assignedDeliveryBoy);
     const [expanded, setExpended] = useState(false)
     const [status, setStatus]=useState<string>(order.status)
     const statusOption=["pending", "out of delivery"]
@@ -65,11 +104,18 @@ function AdminOrderCard({order}:{order:IOrder}) {
                 </p>
 
                 {
-                  order.assigneDeliveryBoy && <div className='mt-4 bg-amber-50 border
+                  order.assignedDeliveryBoy && <div className='mt-4 bg-amber-50 border
                    border-amber-200 rounded-xl p-5 flex items-center justify-between'>
                     <div className='flex items-center gap-3 text-sm text-gray-700'>
-                      <UserCheck/>
+                      <UserCheck className='text-amber-600' size={18}/>
+                      <div className='font-semibold text-gray-800'>
+                        <p>Assigned to : <span>{order.assignedDeliveryBoy.name}</span></p>
+                        <p>📞 +088 {order.assignedDeliveryBoy.mobile}</p>
+                      </div>
                     </div>
+                    <a href={`tel:${order.assignedDeliveryBoy.mobile}`}
+                    className='bg-amber-600 text-white text-xs px-3 py-1.5 hover:bg-amber-700 transition rounded- xl'
+                    >Call</a>
                   </div>
                 }
         </div>
