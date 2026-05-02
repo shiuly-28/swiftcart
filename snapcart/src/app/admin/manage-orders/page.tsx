@@ -2,13 +2,47 @@
 "use client"
 import AdminOrderCard from '@/components/AdminOrderCard'
 import { getSocket } from '@/lib/socket'
-import { IOrder } from '@/models/order.model'
+import { IUser } from '@/models/user.models'
 import axios from 'axios'
 import { ArrowLeft, Key } from 'lucide-react'
+import mongoose from 'mongoose'
 import { div } from 'motion/react-client'
 import { useRouter } from 'next/navigation'
 
 import React, { useEffect, useState } from 'react'
+
+ interface IOrder{
+    _id:mongoose.Types.ObjectId
+    user:mongoose.Types.ObjectId
+    items:[
+        {
+            grocery:mongoose.Types.ObjectId,
+            name:string,
+            price:string,
+            unit:string,
+            image:string
+            quantity:number
+        }
+    ]
+    isPaid:boolean
+    totalAmount:number,
+    paymentMethod:"cod" | "online"
+    address:{
+        fullName:string,
+        mobile:string,
+        city:string,
+        state:string,
+        pincode:string,
+        fullAddress:string,
+        latitude:number,
+        longitude:number
+    }
+    assignment?:mongoose.Schema.Types.ObjectId
+    assignedDeliveryBoy?:IUser
+    status:"pending" | "out of delivery" | "delivered",
+    createdAt?:Date
+    updated?:Date
+}
 
 function ManageOrders() {
     const [orders, setOrders]=useState<IOrder[]>()

@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {motion} from 'motion/react'
 import { ChevronDown, ChevronUp, CreditCard, MapPin, Package, Phone, Truck, User, UserCheck } from 'lucide-react'
 import Image from 'next/image'
@@ -8,46 +8,43 @@ import axios from 'axios'
 import mongoose from 'mongoose'
 import { IUser } from '@/models/user.models'
 
-interface IOrder {
-  _id: mongoose.Types.ObjectId;
-  user: mongoose.Types.ObjectId;
-  items: [
-    {
-      grocery: mongoose.Types.ObjectId;
-      name: string;
-      price: string;
-      unit: string;
-      image: string;
-      quantity: number;
+ interface IOrder{
+    _id:mongoose.Types.ObjectId
+    user:mongoose.Types.ObjectId
+    items:[
+        {
+            grocery:mongoose.Types.ObjectId,
+            name:string,
+            price:string,
+            unit:string,
+            image:string
+            quantity:number
+        }
+    ]
+    isPaid:boolean
+    totalAmount:number,
+    paymentMethod:"cod" | "online"
+    address:{
+        fullName:string,
+        mobile:string,
+        city:string,
+        state:string,
+        pincode:string,
+        fullAddress:string,
+        latitude:number,
+        longitude:number
     }
-  ];
-  isPaid: boolean;
-  totalAmount: number;
-  paymentMethod: "cod" | "online";
-  address: {
-    fullName: string;
-    mobile: string;
-    city: string;
-    state: string;
-    pincode: string;
-    fullAddress: string;
-    latitude: number;
-    longitude: number;
-  };
-  
-  // পপুলেট হলে IUser পাবে, না হলে ObjectId থাকবে
-  assignment?: mongoose.Types.ObjectId | any; 
-  assignedDeliveryBoy?: IUser | mongoose.Types.ObjectId | any; 
-  
-  status: "pending" | "out of delivery" | "delivered";
-  createdAt?: Date;
-  updated?: Date;
+    assignment?:mongoose.Schema.Types.ObjectId
+    assignedDeliveryBoy?:IUser
+    status:"pending" | "out of delivery" | "delivered",
+    createdAt?:Date
+    updated?:Date
 }
 
 function AdminOrderCard({order}:{order:IOrder}) {
   console.log("Delivery Boy in UI:", order.assignedDeliveryBoy);
     const [expanded, setExpended] = useState(false)
-    const [status, setStatus]=useState<string>(order.status)
+    const [status, setStatus]=useState<string>("pending")
     const statusOption=["pending", "out of delivery"]
 
     const updateStatus=async(orderId:string,status:string)=>{
@@ -59,6 +56,12 @@ function AdminOrderCard({order}:{order:IOrder}) {
         console.log(error)
       }
     }
+
+    useEffect(()=>{
+      setStatus(order.status)
+    }, [order])
+
+
   return (
     <motion.div 
     key={order._id.toString()}
@@ -114,7 +117,7 @@ function AdminOrderCard({order}:{order:IOrder}) {
                       </div>
                     </div>
                     <a href={`tel:${order.assignedDeliveryBoy.mobile}`}
-                    className='bg-amber-600 text-white text-xs px-3 py-1.5 hover:bg-amber-700 transition rounded- xl'
+                    className='bg-amber-600 text-white text-xs px-3 py-1.5 hover:bg-amber-700 transition rounded-lg'
                     >Call</a>
                   </div>
                 }
