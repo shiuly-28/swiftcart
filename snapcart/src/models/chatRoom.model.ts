@@ -1,9 +1,12 @@
 import mongoose from "mongoose";
 
 interface IChatRoom{
+    _id?:mongoose.Types.ObjectId,
     userId:mongoose.Types.ObjectId,
     deliveryBoyId:mongoose.Types.ObjectId,
     orderId:mongoose.Types.ObjectId,
+    createdAt:Date,
+    updatedAt:Date
 }
 const chatRoomSchema=new mongoose.Schema<IChatRoom>({
     userId:{
@@ -24,4 +27,4 @@ const chatRoomSchema=new mongoose.Schema<IChatRoom>({
 const ChatRoom=mongoose.models.ChatRoom || mongoose.model("ChatRoom",
     chatRoomSchema)
 
-export default ChatRoom
+export default ChatRoom;
