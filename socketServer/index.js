@@ -33,7 +33,11 @@ io.on("connection", (socket)=>{
         }
        await axios.post(`${process.env.NEXT_BASE_URL}/api/socket/update-location`,
             {userId, location})
+
+            io.emit("updated-deliverryBoy-location", {userId,location})
     })
+
+    
 
     socket.on("disconnect",()=>{
         console.log("user disconnect", socket.id)

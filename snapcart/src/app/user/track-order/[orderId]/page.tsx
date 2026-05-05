@@ -1,5 +1,6 @@
 "use client"
 import LiveMap from '@/components/LiveMap';
+import { getSocket } from '@/lib/socket';
 import { IUser } from '@/models/user.models';
 import axios from 'axios';
 import { ArrowLeftIcon } from 'lucide-react';
@@ -82,6 +83,19 @@ function TrackerOrder({params}:{params:{orderId:string}}){
     }
     getOrder()
   }, [orderId])
+
+  useEffect(():any=>{
+    const socket=getSocket()
+    socket.on("updated-deliverryBoy-location", (data)=>{
+     
+        setDeliveryBoyLocation({
+          latitude:data.location.coordinates[1] ?? data.location.latitude,
+          longitude:data.location.coordinates[0] ?? data.location.longitude
+        })
+      
+    })
+    return()=>socket.off("updated-deliverryBoy-location")
+  },[order])
   return (
     <div className='w-full min-h-screen bg-linear-to-b from-amber-50 to-white mt-5'>
       <div className='max-w-2xl mx-auto pb-24'>
