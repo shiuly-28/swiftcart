@@ -21,7 +21,7 @@ const messageSchema=new mongoose.Schema<IMessage>({
     senderId:{
 
         type:mongoose.Schema.Types.ObjectId,
-        ref:"user"
+        ref:"User"
     },
 time:String
 },{timestamps:true})

@@ -5,8 +5,8 @@ interface IChatRoom{
     userId:mongoose.Types.ObjectId,
     deliveryBoyId:mongoose.Types.ObjectId,
     orderId:mongoose.Types.ObjectId,
-    createdAt:Date,
-    updatedAt:Date
+    createdAt?:Date,
+    updatedAt?:Date
 }
 const chatRoomSchema=new mongoose.Schema<IChatRoom>({
     userId:{
@@ -19,7 +19,7 @@ const chatRoomSchema=new mongoose.Schema<IChatRoom>({
     },
     orderId:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:"User"
+        ref:"Order"
     }
 
 }, {timestamps:true})

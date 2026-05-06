@@ -5,6 +5,7 @@ import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import LiveMap from './LiveMap'
+import DeliveryChat from './DeliveryChat'
 
 interface Ilocation{
   latitude:number,
@@ -106,6 +107,7 @@ useEffect((): any => {
           <div className='rounded-xl border text-gray-300 shadow-lg overflow-hidden mb-6'>
             <LiveMap userLocation={userLocation} deliveryBoyLocation={deliveryBoyLocation}/>
           </div>
+          <DeliveryChat orderId={activeOrder.order._id} deliveryBoyId={userData?._id!}/>
         </div>
       </div>
     )
