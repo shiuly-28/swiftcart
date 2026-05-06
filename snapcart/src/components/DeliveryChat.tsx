@@ -1,12 +1,18 @@
+import { getSocket } from '@/lib/socket'
 import { Send } from 'lucide-react'
 import mongoose from 'mongoose'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 type props={
     orderId:mongoose.Types.ObjectId,
     deliveryBoyId:mongoose.Types.ObjectId
 }
 function DeliveryChat({orderId,deliveryBoyId}:props) {
     const [newMessage, setNewMessage]=useState("")
+
+    useEffect(()=>{
+      const socket=getSocket()
+      socket.emit("join-room", orderId)
+    },[])
   return (
     <div className='bg-white rounded-3xl shadow-lg border p-4 h-[430px] flex flex-col'>
    <div className='flex gap-2 mt-3 border-t pt-3'>

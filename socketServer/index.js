@@ -37,6 +37,11 @@ io.on("connection", (socket)=>{
             io.emit("updated-deliverryBoy-location", {userId,location})
     })
 
+    socket.on("join-room",(roomId)=>{
+        console.log("join room with", roomId)
+        socket.join(roomId)
+    })
+
     
 
     socket.on("disconnect",()=>{

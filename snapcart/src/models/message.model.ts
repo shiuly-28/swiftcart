@@ -13,7 +13,7 @@ interface IMessage{
 const messageSchema=new mongoose.Schema<IMessage>({
     roomId:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:"ChatRoom"
+        ref:"Order"
     },
     text:{
         type:String
