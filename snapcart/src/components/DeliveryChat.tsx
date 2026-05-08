@@ -1,7 +1,9 @@
+
+"use client"
 import { getSocket } from '@/lib/socket'
 import { IMessage } from '@/models/message.model'
 import axios from 'axios'
-import { Send } from 'lucide-react'
+import { Send, Sparkle } from 'lucide-react'
 import mongoose from 'mongoose'
 
 import {AnimatePresence, motion} from 'motion/react'
@@ -67,13 +69,40 @@ function DeliveryChat({orderId,deliveryBoyId}:props) {
       getAllMessages()
     },[])
 
-
+const getSuggestion=async ()=>{
+  try{
+    const lastMessage=message?.filter(m=>m.senderId!==deliveryBoyId)?.at(-1)
+    const result=await axios.post("/api/chat/ai-suggestions",
+      {messages:lastMessage?.text,role:"delivery_boy"})
+      console.log(result.data)
+  }catch(error){
+    console.log(error)
+}
 
   return (
     <div className='bg-white rounded-3xl shadow-lg border p-4 h-[430px] flex flex-col '>
 
       <div className='flex justify-between items-center mb-3'>
-        <span>AI Suggestions</span>
+        <span className='font-semibold text-gray-700 text-sm'>Quick Replices</span>
+        <motion.button
+        whileTap={{scale: 0.9}}
+        onClick={getSuggestion}
+        className='px-3 py-1 text-xs flex items-center gap-1
+         text-pink-500 rounded-full bg-gray-300 shadow-sm boder border-pink-50 cursor-pointer'
+        ><Sparkle size={14}/><span>AI Suggestions</span></motion.button>
+      </div>
+      <div className='flex gap-2 flex-wrap mb-3'>
+        {suggestions.map((s,i)=>(
+          <motion.div
+          key={s}
+          whileTap={{scale:0.92 }}
+          className='px-3 py-1 text-xs bg-amber-50 border border-amber-200
+           text-amber-700 rounded-full cursor-pointer'
+          onClick={()=>setNewMessage(s)}
+          >
+            {s}
+          </motion.div>
+        ))}
       </div>
       <div className='flex-1 overflow-x-auto p-2 space-y-3' ref={chatBoxRef}>
         <AnimatePresence>
@@ -106,6 +135,7 @@ function DeliveryChat({orderId,deliveryBoyId}:props) {
    </div>
     </div>
   )
+}
 }
 
 export default DeliveryChat;

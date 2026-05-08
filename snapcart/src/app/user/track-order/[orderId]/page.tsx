@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic';
 import { getSocket } from '@/lib/socket';
 import { IUser } from '@/models/user.models';
 import axios from 'axios';
-import { ArrowLeftIcon, Send } from 'lucide-react';
+import { ArrowLeftIcon, Send, Sparkle } from 'lucide-react';
 import mongoose from 'mongoose';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useEffect, useState, useRef } from 'react';
@@ -46,6 +46,10 @@ function TrackerOrder() {
     const [order, setOrder] = useState<IOrder | null>(null);
     const [userLocation, setUserLocation] = useState<Ilocation>({ latitude: 0, longitude: 0 });
     const [deliveryBoyLocation, setDeliveryBoyLocation] = useState<Ilocation>({ latitude: 0, longitude: 0 });
+
+      const [suggestions, setsuggestions]=useState([
+          "hello", "thank you", "hill"
+        ])
 
     // অটো স্ক্রল লজিক
     useEffect(() => {
@@ -158,7 +162,30 @@ function TrackerOrder() {
                     </div>
 
                     <div className='bg-white rounded-3xl shadow-lg border p-4 h-[430px] flex flex-col'>
-                        <div ref={scrollRef} className='flex-1 overflow-y-auto p-2 space-y-3 scroll-smooth' ref={chatBoxRef}>
+
+                        <div className='flex justify-between items-center mb-3'>
+        <span className='font-semibold text-gray-700 text-sm'>Quick Replices</span>
+        <motion.button
+        whileTap={{scale: 0.9}}
+        className='px-3 py-1 text-xs flex items-center gap-1 text-pink-500 rounded-full bg-gray-300 shadow-sm boder
+         border-pink-50 cursor-pointer'
+        ><Sparkle size={14}/><span>AI Suggestions</span></motion.button>
+      </div>
+      <div className='flex gap-2 flex-wrap mb-3'>
+        {suggestions.map((s,i)=>(
+          <motion.div
+          key={s}
+          whileTap={{scale:0.92 }}
+          className='px-3 py-1 text-xs bg-amber-50 border border-amber-200 text-amber-700 rounded-full'
+          onClick={()=>setNewMessage(s)}
+          >
+            {s}
+          </motion.div>
+        ))}
+      </div>
+
+                        <div ref={scrollRef} className='flex-1 overflow-y-auto p-2 space-y-3 scroll-smooth' ref=
+                        {chatBoxRef}>
                             <AnimatePresence>
                                 {messages.map((msg, index) => (
                                     <motion.div
