@@ -184,7 +184,7 @@ function TrackerOrder() {
         ))}
       </div>
 
-                        <div ref={scrollRef} className='flex-1 overflow-y-auto p-2 space-y-3 scroll-smooth' ref=
+         <div ref={scrollRef} className='flex-1 overflow-y-auto p-2 space-y-3 scroll-smooth' ref=
                         {chatBoxRef}>
                             <AnimatePresence>
                                 {messages.map((msg, index) => (
