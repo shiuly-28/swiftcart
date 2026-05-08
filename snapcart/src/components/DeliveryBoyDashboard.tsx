@@ -4,8 +4,13 @@ import { RootState } from '@/redux/store'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import LiveMap from './LiveMap'
 import DeliveryChat from './DeliveryChat'
+import dynamic from 'next/dynamic'
+
+const LiveMap = dynamic(() => import('@/components/LiveMap'), { 
+    ssr: false,
+    loading: () => <div className="h-[400px] w-full bg-gray-100 animate-pulse rounded-xl flex items-center justify-center">Loading Map...</div>
+});
 
 interface Ilocation{
   latitude:number,
@@ -100,21 +105,27 @@ useEffect((): any => {
 
   if(activeOrder && userLocation){
     return(
-      <div className='p-4 pt-[120px] min-h-screen bg-gray-50' >
+      <div className='p-4 pt-[120px] min-h-screen bg-gray-50 ' >
         <div className='max-w-3xl mx-auto'>
           <h1 className='text-2xl font-bold text-amber-700 mb-2'>Active Delivery</h1>
           <p>Order# {activeOrder.order._id.slice(-6)}</p>
           <div className='rounded-xl border text-gray-300 shadow-lg overflow-hidden mb-6'>
             <LiveMap userLocation={userLocation} deliveryBoyLocation={deliveryBoyLocation}/>
           </div>
-          <DeliveryChat orderId={activeOrder.order._id} deliveryBoyId={userData?._id!}/>
+          {/* <DeliveryChat orderId={activeOrder.order._id} deliveryBoyId={userData?._id}/> */}
+          {userData?._id && (
+  <DeliveryChat 
+    orderId={activeOrder.order?._id} 
+    deliveryBoyId={userData._id} 
+  />
+)}
         </div>
       </div>
     )
   }
   return (
-    <div className='w-full min-h-screen bg-gray-50 p-4'>
-      <div className='max-w-3xl mx-auto'>
+    <div className='w-full min-h-screen bg-gray-50 p-4 '>
+      <div className='max-w-3xl mx-auto '>
         <h2 className='text-2xl font-bold mt-[100px] mb-[30px]'>Delivery Assignment</h2>
         {
           assignments?.map(a=>(

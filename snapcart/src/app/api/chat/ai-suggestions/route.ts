@@ -1,0 +1,57 @@
+import connectDb from "@/lib/db";
+import { error } from "console";
+import { NextRequest, NextResponse } from "next/server";
+
+export async function POST(req:NextRequest){
+    try{
+        await connectDb()
+        const {message, role}=await req.json()
+
+        const prompt=`You are a professional delivery assistant chatbot.
+        
+        You will be given :
+        - role: eiher "user" or "delivery_boy"
+        -last message: the last message sent in the conversation
+        
+        Your Task:
+        -If role is  "user" generate 3 short WhatsApp-style reply suggestions that a user could send to the delivery boy.
+        If role is "delivery_boy"  generate 3 short WhastApp-style reply suggestion that a delivery boy could send to the user.
+        
+        Follow thease roules:
+        - Replies must match the context of the last message.
+        - keep replies short, human-like (max 10 words).
+        - Use emojis naturally (max one per reply).
+        - No generic replies like "Okay" or "Thank You."
+        - Must be helpful, respectful, and relevant to delivery, status, help, or location.
+        - No numbering, No extra instructions, No extra text.
+        - Just return comma-seperated reply suggestions
+        
+        Return only the three reply suggestions, comma-separated.
+        Role: ${role} 
+        Last message: ${message}` 
+
+        const response=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent
+            ?key=${process.env.GEMINI_API_KEY}`,{
+                method:"POST",
+                headers:{"Content-Type" : "application/json"},
+                body:JSON.stringify({
+                     "contents": [
+                     {
+                     "parts": [
+                     {
+                 "text": prompt
+             }
+            ]
+         }
+        ]
+      })
+     })
+
+     const data=await response.json()
+     return NextResponse.json(
+       {message:`gimini error ${error}`},{status:200}
+     )
+    }catch(error){
+        
+    }
+}

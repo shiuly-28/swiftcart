@@ -3,9 +3,9 @@ import { IMessage } from '@/models/message.model'
 import axios from 'axios'
 import { Send } from 'lucide-react'
 import mongoose from 'mongoose'
-import { AnimatePresence } from 'motion/react'
-import {motion} from 'motion/react'
-import React, { useEffect, useState } from 'react'
+
+import {AnimatePresence, motion} from 'motion/react'
+import React, { useEffect, useRef, useState } from 'react'
 type props={
     orderId:mongoose.Types.ObjectId,
     deliveryBoyId:mongoose.Types.ObjectId
@@ -13,6 +13,10 @@ type props={
 function DeliveryChat({orderId,deliveryBoyId}:props) {
     const [newMessage, setNewMessage]=useState("")
     const [message, setMessage]=useState<IMessage[]>()
+    const chatBoxRef=useRef<HTMLDivElement>(null)
+    const [suggestions, setsuggestions]=useState([
+      "hello", "thank you", "hill"
+    ])
 
     useEffect(()=>{
       const socket=getSocket()
@@ -45,6 +49,13 @@ function DeliveryChat({orderId,deliveryBoyId}:props) {
     }
 
     useEffect(()=>{
+      chatBoxRef.current?.scrollTo({
+        top:chatBoxRef.current.scrollHeight,
+        behavior:"smooth"
+      })
+    },[message])
+
+    useEffect(()=>{
       const getAllMessages=async ()=>{
         try{
           const result=await axios.post("/api/chat/messages",{roomId:orderId})
@@ -55,13 +66,20 @@ function DeliveryChat({orderId,deliveryBoyId}:props) {
       }
       getAllMessages()
     },[])
+
+
+
   return (
-    <div className='bg-white rounded-3xl shadow-lg border p-4 h-[430px] flex flex-col'>
-      <div className='flex-1 overflow-x-auto p-2 space-y-3'>
+    <div className='bg-white rounded-3xl shadow-lg border p-4 h-[430px] flex flex-col '>
+
+      <div className='flex justify-between items-center mb-3'>
+        <span>AI Suggestions</span>
+      </div>
+      <div className='flex-1 overflow-x-auto p-2 space-y-3' ref={chatBoxRef}>
         <AnimatePresence>
           {message?.map((msg,index)=>(
             <motion.div
-            key={msg._id?.toString()}
+            key={msg._id?.toString() || `msg-${index}`}
             initial={{opacity:0, y: 15}}
             animate={{opacity: 1, y:0}}
             exit={{opacity:0}}
@@ -81,7 +99,7 @@ function DeliveryChat({orderId,deliveryBoyId}:props) {
           ))}
         </AnimatePresence>
       </div>
-   <div className='flex gap-2 mt-3 border-t pt-3'>
+   <div className='flex gap-2 mt-3 border-t pt-3 '>
     <input type="text" placeholder='Type a Message...' className='flex-1 bg-gray-100 px-4 py-2 rounded-xl outline-none 
     focus:ring-2 focus:ring-amber-300' value={newMessage} onChange={(e)=>setNewMessage(e.target.value)}/>
     <button className='bg-amber-500 hover:bg-amber-700 p-3 rounded-xl text-white' onClick={sendMsg}><Send size={18}/></button>
