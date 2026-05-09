@@ -1,7 +1,7 @@
 import { getSocket } from '@/lib/socket'
 import { IMessage } from '@/models/message.model'
 import axios from 'axios'
-import { Send, Sparkle } from 'lucide-react'
+import { Loader, Send, Sparkle } from 'lucide-react'
 import mongoose from 'mongoose'
 
 import {AnimatePresence, motion} from 'motion/react'
@@ -15,6 +15,7 @@ function DeliveryChat({orderId,deliveryBoyId}:props) {
     const [message, setMessage]=useState<IMessage[]>()
     const chatBoxRef=useRef<HTMLDivElement>(null)
     const [suggestions, setsuggestions]=useState([])
+    const [loading, setLoading]=useState(false)
 
     useEffect(()=>{
       const socket=getSocket()
@@ -66,13 +67,16 @@ function DeliveryChat({orderId,deliveryBoyId}:props) {
     },[])
 
 const getSuggestion=async ()=>{
+  setLoading(true)
   try{
     const lastMessage=message?.filter(m=>m.senderId!==deliveryBoyId)?.at(-1)
     const result=await axios.post("/api/chat/ai-suggestions",
       {message:lastMessage?.text,role:"delivery_boy"})
       setsuggestions(result.data)
+      setLoading(false)
   }catch(error){
     console.log(error)
+    setLoading(false)
   }
 }
 
@@ -83,10 +87,11 @@ const getSuggestion=async ()=>{
         <span className='font-semibold text-gray-700 text-sm'>Quick Replices</span>
         <motion.button
         whileTap={{scale: 0.9}}
+        disabled={loading}
         onClick={getSuggestion}
         className='px-3 py-1 text-xs flex items-center gap-1
          text-pink-500 rounded-full bg-gray-300 shadow-sm boder border-pink-50 cursor-pointer'
-        ><Sparkle size={14}/><span>AI Suggestions</span></motion.button>
+        ><Sparkle size={14}/>{loading?<Loader className='w-5 h-5 animate-spin'/>:"AI Suggestions"}</motion.button>
       </div>
       <div className='flex gap-2 flex-wrap mb-3'>
         {suggestions.map((s,i)=>(
