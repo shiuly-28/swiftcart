@@ -1,5 +1,3 @@
-
-"use client"
 import { getSocket } from '@/lib/socket'
 import { IMessage } from '@/models/message.model'
 import axios from 'axios'
@@ -16,9 +14,7 @@ function DeliveryChat({orderId,deliveryBoyId}:props) {
     const [newMessage, setNewMessage]=useState("")
     const [message, setMessage]=useState<IMessage[]>()
     const chatBoxRef=useRef<HTMLDivElement>(null)
-    const [suggestions, setsuggestions]=useState([
-      "hello", "thank you", "hill"
-    ])
+    const [suggestions, setsuggestions]=useState([])
 
     useEffect(()=>{
       const socket=getSocket()
@@ -73,10 +69,11 @@ const getSuggestion=async ()=>{
   try{
     const lastMessage=message?.filter(m=>m.senderId!==deliveryBoyId)?.at(-1)
     const result=await axios.post("/api/chat/ai-suggestions",
-      {messages:lastMessage?.text,role:"delivery_boy"})
-      console.log(result.data)
+      {message:lastMessage?.text,role:"delivery_boy"})
+      setsuggestions(result.data)
   }catch(error){
     console.log(error)
+  }
 }
 
   return (
@@ -135,7 +132,6 @@ const getSuggestion=async ()=>{
    </div>
     </div>
   )
-}
 }
 
 export default DeliveryChat;
