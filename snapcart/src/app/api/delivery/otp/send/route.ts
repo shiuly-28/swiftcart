@@ -32,7 +32,7 @@ export async function POST(req:NextRequest){
     }catch(error){
          return NextResponse.json(
              {message:`send otp error ${error}`},
-            {status:400}
+            {status:500}
            )
     }
 }

@@ -14,7 +14,7 @@ function DeliveryChat({orderId,deliveryBoyId}:props) {
     const [newMessage, setNewMessage]=useState("")
     const [message, setMessage]=useState<IMessage[]>()
     const chatBoxRef=useRef<HTMLDivElement>(null)
-    const [suggestions, setsuggestions]=useState([])
+    const [suggestions, setsuggestions] = useState<string[]>([]);
     const [loading, setLoading]=useState(false)
 
     useEffect(()=>{

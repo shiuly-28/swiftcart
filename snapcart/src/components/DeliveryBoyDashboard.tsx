@@ -21,6 +21,8 @@ function DeliveryBoyDashboard() {
   const [assignments, setAssignments] = useState<any[]>([])
   const {userData}=useSelector((state:RootState)=>state.user)
   const [activeOrder, setActiveOrder]=useState<any>(null)
+  const [showOtpBox, setShowOtpBox] = useState(false)
+  const [otp, setOtp]=useState("")
   const [userLocation, setUserLocation] = useState<Ilocation>(
       {
       latitude:0,
@@ -114,6 +116,17 @@ useEffect((): any => {
    fetchAssignments()
   },[userData])
 
+  const sendOtp = async ()=>{
+    try{
+      const result=await axios.post("/api/delivery/otp/send", {orderId:activeOrder.order._id})
+      console.log(result.data)
+      setShowOtpBox(true)
+    }
+    catch(error){
+      console.log(error)
+    }
+  }
+
   if(activeOrder && userLocation){
     return(
       <div className='p-4 pt-[120px] min-h-screen bg-gray-50 ' >
@@ -125,11 +138,29 @@ useEffect((): any => {
           </div>
           {/* <DeliveryChat orderId={activeOrder.order._id} deliveryBoyId={userData?._id}/> */}
           {userData?._id && (
-  <DeliveryChat 
-    orderId={activeOrder.order?._id} 
-    deliveryBoyId={userData._id} 
-  />
-)}
+          <DeliveryChat 
+          orderId={activeOrder.order?._id} 
+          deliveryBoyId={userData._id} 
+        />
+      )}
+      <div className='mt-6 bg-white rounded-xl border shadow p-6'>
+        {!activeOrder.order.deliveryOtpVerification && ! showOtpBox && (
+          <button
+          onClick={sendOtp}
+         className='w-full bg-amber-600 text-white rounded-lg p-3'
+         >Mark as Delivered</button>
+        )}
+        {
+          showOtpBox && 
+          <div className='mt-4'>
+            <input type="text" className='w-full py-3 border rounded-lg text-center'
+            placeholder='Enter Otp' maxLength={4} />
+            <button className='w-full bg-pink-400 text-white py-3 rounded-lg'>Verify OTP</button>
+          </div>
+        }
+        
+      </div>
+
         </div>
       </div>
     )
