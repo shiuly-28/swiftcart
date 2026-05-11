@@ -98,6 +98,17 @@ useEffect((): any => {
     }
   }
 
+  useEffect(():any=>{
+    const socket=getSocket()
+    socket.on("updated-deliverryBoy-location", ({userId, location})=>{
+      setDeliveryBoyLocation({
+        latitude:location.coordinates[1],
+        longitude:location.coordinates[0]
+      })
+    })
+    return ()=>socket.off("updated-deliverryBoy-location")
+  },[])
+  
     useEffect(()=>{
   fetchCurrentOrder()
    fetchAssignments()

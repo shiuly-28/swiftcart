@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic';
 import { getSocket } from '@/lib/socket';
 import { IUser } from '@/models/user.models';
 import axios from 'axios';
-import { ArrowLeftIcon, Send, Sparkle } from 'lucide-react';
+import { ArrowLeftIcon, Loader, Send, Sparkle } from 'lucide-react';
 import mongoose from 'mongoose';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useEffect, useState, useRef } from 'react';
@@ -42,7 +42,7 @@ function TrackerOrder() {
     const [userData, setUserData] = useState<any>(null); // আপনার Auth Context থেকে এটি সেট করুন
     const [newMessage, setNewMessage] = useState("");
     const [messages, setMessages] = useState<IMessage[]>([]);
-
+    const [loading, setLoading]=useState(false)
     const [order, setOrder] = useState<IOrder | null>(null);
     const [userLocation, setUserLocation] = useState<Ilocation>({ latitude: 0, longitude: 0 });
     const [deliveryBoyLocation, setDeliveryBoyLocation] = useState<Ilocation>({ latitude: 0, longitude: 0 });
@@ -140,6 +140,20 @@ function TrackerOrder() {
           })
         },[messages])
 
+        const getSuggestion=async ()=>{
+  setLoading(true)
+  try{
+    const lastMessage=messages?.filter(m=>m.senderId!==userData?._id)?.at(-1)
+    const result=await axios.post("/api/chat/ai-suggestions",
+      {message:lastMessage?.text,role:"user"})
+      setsuggestions(result.data)
+      setLoading(false)
+  }catch(error){
+    console.log(error)
+    setLoading(false)
+  }
+}
+
     return (
         <div className='w-full min-h-screen bg-gradient-to-b from-amber-50 to-white'>
             <div className='max-w-2xl mx-auto pb-24'>
@@ -167,9 +181,11 @@ function TrackerOrder() {
         <span className='font-semibold text-gray-700 text-sm'>Quick Replices</span>
         <motion.button
         whileTap={{scale: 0.9}}
+        disabled={loading}
         className='px-3 py-1 text-xs flex items-center gap-1 text-pink-500 rounded-full bg-gray-300 shadow-sm boder
          border-pink-50 cursor-pointer'
-        ><Sparkle size={14}/><span>AI Suggestions</span></motion.button>
+         onClick={getSuggestion}
+        ><Sparkle size={14}/>{loading?<Loader className='w-5 h-5 animate-spin'/>:"AI Suggestions"}</motion.button>
       </div>
       <div className='flex gap-2 flex-wrap mb-3'>
         {suggestions.map((s,i)=>(
