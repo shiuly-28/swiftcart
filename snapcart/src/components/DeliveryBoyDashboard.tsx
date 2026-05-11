@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import DeliveryChat from './DeliveryChat'
 import dynamic from 'next/dynamic'
+import { Loader } from 'lucide-react'
 
 const LiveMap = dynamic(() => import('@/components/LiveMap'), { 
     ssr: false,
@@ -22,6 +23,9 @@ function DeliveryBoyDashboard() {
   const {userData}=useSelector((state:RootState)=>state.user)
   const [activeOrder, setActiveOrder]=useState<any>(null)
   const [showOtpBox, setShowOtpBox] = useState(false)
+  const [otpError, setOtpError]=useState("")
+  const [sendOtpLoading, setSendOtpLoading]=useState(false)
+  const [verifyOtpLoading, setVerifyOtpLoading]=useState(false)
   const [otp, setOtp]=useState("")
   const [userLocation, setUserLocation] = useState<Ilocation>(
       {
@@ -117,13 +121,31 @@ useEffect((): any => {
   },[userData])
 
   const sendOtp = async ()=>{
+    setSendOtpLoading(true)
     try{
       const result=await axios.post("/api/delivery/otp/send", {orderId:activeOrder.order._id})
       console.log(result.data)
       setShowOtpBox(true)
+      setSendOtpLoading(false)
     }
     catch(error){
       console.log(error)
+      setSendOtpLoading(false)
+    }
+  }
+
+  const veryfyOtp=async ()=>{
+    setVerifyOtpLoading(true)
+      try{
+      const result=await axios.post("/api/delivery/otp/verify", {orderId:activeOrder.order._id,otp})
+      console.log(result.data)
+      setActiveOrder(null)
+      setVerifyOtpLoading(false)
+      await fetchCurrentOrder()
+    }
+    catch(error){
+      setOtpError("Otp Verification Error")
+      setVerifyOtpLoading(false)
     }
   }
 
@@ -132,7 +154,7 @@ useEffect((): any => {
       <div className='p-4 pt-[120px] min-h-screen bg-gray-50 ' >
         <div className='max-w-3xl mx-auto'>
           <h1 className='text-2xl font-bold text-amber-700 mb-2'>Active Delivery</h1>
-          <p>Order# {activeOrder.order._id.slice(-6)}</p>
+          <p>Order# {activeOrder?.order?._id?.slice(-6)}</p>
           <div className='rounded-xl border text-gray-300 shadow-lg overflow-hidden mb-6'>
             <LiveMap userLocation={userLocation} deliveryBoyLocation={deliveryBoyLocation}/>
           </div>
@@ -143,21 +165,25 @@ useEffect((): any => {
           deliveryBoyId={userData._id} 
         />
       )}
-      <div className='mt-6 bg-white rounded-xl border shadow p-6'>
-        {!activeOrder.order.deliveryOtpVerification && ! showOtpBox && (
+      <div className='mt-6 bg-white rounded-xl border shadow p-6 '>
+        {!activeOrder?.order?.deliveryOtpVerification && !showOtpBox && (
           <button
           onClick={sendOtp}
-         className='w-full bg-amber-600 text-white rounded-lg p-3'
-         >Mark as Delivered</button>
+         className='w-full bg-amber-600 text-white rounded-lg py-3 text-center'
+         >{sendOtpLoading?<Loader size={16} className='animate-spin text-white'/>:"Mark As Delivered"}</button>
         )}
         {
           showOtpBox && 
           <div className='mt-4'>
             <input type="text" className='w-full py-3 border rounded-lg text-center'
-            placeholder='Enter Otp' maxLength={4} />
-            <button className='w-full bg-pink-400 text-white py-3 rounded-lg'>Verify OTP</button>
+            placeholder='Enter Otp' maxLength={4} onChange={(e)=>setOtp(e.target.value)}  value={otp}/>
+            <button className='w-full bg-pink-600 text-white py-3 rounded-lg mt-4'
+             onClick={veryfyOtp}>{verifyOtpLoading?
+              <Loader size={16} className='animate-spin text-white'/>: "Verify OTP"}</button>
+            {otpError && <div className='text-red-600 mt-2'>{otpError}</div>}
           </div>
         }
+        {activeOrder?.order?.deliveryOtpVerification && <div className='text-amber-700 text-center font-bold'>Delivery Completed!</div>}
         
       </div>
 
