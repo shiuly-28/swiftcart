@@ -53,7 +53,7 @@ function LiveMap({ userLocation, deliveryBoyLocation }: Iprops) {
         scrollWheelZoom={true} 
         className='w-full h-full'
       >
-        <Recenter positions={center} />
+        <Recenter positions={center as any} />
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -73,7 +73,7 @@ function LiveMap({ userLocation, deliveryBoyLocation }: Iprops) {
 
         {/* পথ দেখানোর জন্য পলিলাইন */}
         {deliveryBoyLocation.latitude !== 0 && (
-          <Polyline positions={linePositions} color='orange' weight={4} dashArray="5, 10" />
+          <Polyline positions={linePositions as any} color='orange' weight={4} dashArray="5, 10" />
         )}
       </MapContainer>
     </div>

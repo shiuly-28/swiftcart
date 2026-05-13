@@ -26,7 +26,7 @@ function DeliveryChat({orderId,deliveryBoyId}:props) {
         }
        
       })
-    },[])
+    },[orderId])
 
     const sendMsg=()=>{
       const socket=getSocket()
@@ -41,9 +41,7 @@ function DeliveryChat({orderId,deliveryBoyId}:props) {
 
         })
       }
-
       socket.emit("send-message", message)
-     
       setNewMessage("")
     }
 

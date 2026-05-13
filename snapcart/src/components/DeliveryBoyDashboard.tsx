@@ -158,7 +158,7 @@ useEffect((): any => {
           <div className='rounded-xl border text-gray-300 shadow-lg overflow-hidden mb-6'>
             <LiveMap userLocation={userLocation} deliveryBoyLocation={deliveryBoyLocation}/>
           </div>
-          {/* <DeliveryChat orderId={activeOrder.order._id} deliveryBoyId={userData?._id}/> */}
+          {/* <DeliveryChat orderId={activeOrder.order?._id} deliveryBoyId={userData?._id!}/> */}
           {userData?._id && (
           <DeliveryChat 
           orderId={activeOrder.order?._id} 

@@ -9,6 +9,8 @@ import { useParams, useRouter } from 'next/navigation';
 import React, { useEffect, useState, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { IMessage } from '@/models/message.model';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
 
 // LiveMap কে Dynamic Import করা হলো SSR এরর বন্ধ করতে
 const LiveMap = dynamic(() => import('@/components/LiveMap'), { 
@@ -34,12 +36,13 @@ interface Ilocation {
     longitude: number;
 }
 
-function TrackerOrder() {
+function TrackerOrder({params}:{params:{orderId:string}}) {
+    const{userData}=useSelector((state:RootState)=>state.user)
     const { orderId } = useParams();
     const router = useRouter();
     const scrollRef = useRef<HTMLDivElement>(null);
     const chatBoxRef=useRef<HTMLDivElement>(null)
-    const [userData, setUserData] = useState<any>(null); // আপনার Auth Context থেকে এটি সেট করুন
+    // const [userData, setUserData] = useState<any>(null); 
     const [newMessage, setNewMessage] = useState("");
     const [messages, setMessages] = useState<IMessage[]>([]);
     const [loading, setLoading]=useState(false)
@@ -91,7 +94,7 @@ function TrackerOrder() {
             getOrder();
             getAllMessages();
         }
-    }, [orderId]);
+    }, [orderId?._id]);
 
     useEffect(() => {
         const socket = getSocket();
@@ -155,10 +158,10 @@ function TrackerOrder() {
 }
 
     return (
-        <div className='w-full min-h-screen bg-gradient-to-b from-amber-50 to-white'>
+        <div className='w-full min-h-screen bg-linear-to-b from-amber-50 to-white'>
             <div className='max-w-2xl mx-auto pb-24'>
                 <div className='sticky top-0 bg-white/80 backdrop-blur-xl p-4 border-b shadow flex gap-3 items-center z-999'>
-                    <button className='p-2 bg-amber-100 rounded-full text-amber-500' onClick={() => router.back()}>
+                    <button className='p-2 bg-amber-100 rounded-full text-amber-500' onClick={() =>router.back()}>
                         <ArrowLeftIcon />
                     </button>
                     <div>
