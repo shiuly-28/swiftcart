@@ -196,8 +196,8 @@ useEffect((): any => {
       <div className='max-w-3xl mx-auto '>
         <h2 className='text-2xl font-bold mt-[100px] mb-[30px]'>Delivery Assignment</h2>
         {
-          assignments?.map(a=>(
-           <div key={a._id} className='p-5 bg-white rounded-xl shadow mb-4 border'>
+          assignments?.map((a,index)=>(
+           <div key={index} className='p-5 bg-white rounded-xl shadow mb-4 border'>
             <p><b>Order id</b> #{a?.order?._id?.slice(-6)}</p>
             <p className='text-gray-600'>{a.order.address.fullAddress}</p>
             

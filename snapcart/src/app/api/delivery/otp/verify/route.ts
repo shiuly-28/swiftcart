@@ -7,9 +7,9 @@ export async function POST(req:NextRequest){
     try{
         await connectDb()
         const {orderId, otp}=await req.json()
-        if(!orderId || otp){
+        if(!orderId || !otp){
              return NextResponse.json(
-                         {message:"Incorrect or expected Otp"},
+                         {message:"orderId or OTP not found"},
                         {status:400}
                        )
         }
@@ -20,6 +20,13 @@ export async function POST(req:NextRequest){
              {message:"order not found"},
             {status:400}
            )
+    }
+
+    if(order.deliveryOtp!==otp){
+       return NextResponse.json(
+             {message:"Incorrect or expired Otp"},
+            {status:400}
+        ) 
     }
 
     order.status="delivered"

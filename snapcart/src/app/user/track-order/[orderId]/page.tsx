@@ -94,7 +94,19 @@ function TrackerOrder({params}:{params:{orderId:string}}) {
             getOrder();
             getAllMessages();
         }
-    }, [orderId?._id]);
+    }, []);
+
+    //   useEffect(()=>{
+    //   const getAllMessages=async ()=>{
+    //     try{
+    //       const result=await axios.post("/api/chat/messages",{roomId:orderId})
+    //       setMessages(result.data)
+    //     }catch(error){
+    //       console.log(error)
+    //     }
+    //   }
+    //   getAllMessages()
+    // },[])
 
     useEffect(() => {
         const socket = getSocket();
@@ -143,7 +155,7 @@ function TrackerOrder({params}:{params:{orderId:string}}) {
           })
         },[messages])
 
-        const getSuggestion=async ()=>{
+const getSuggestion=async ()=>{
   setLoading(true)
   try{
     const lastMessage=messages?.filter(m=>m.senderId!==userData?._id)?.at(-1)
@@ -203,7 +215,7 @@ function TrackerOrder({params}:{params:{orderId:string}}) {
         ))}
       </div>
 
-         <div  className='flex-1 overflow-y-auto p-2 space-y-3 scroll-smooth' ref=
+         {/* <div  className='flex-1 overflow-y-auto p-2 space-y-3 scroll-smooth' ref=
                         {chatBoxRef}>
                             <AnimatePresence>
                                 {messages.map((msg, index) => (
@@ -222,7 +234,32 @@ function TrackerOrder({params}:{params:{orderId:string}}) {
                                     </motion.div>
                                 ))}
                             </AnimatePresence>
-                        </div>
+                        </div> */}
+
+                        <div className='flex-1 overflow-x-auto p-2 space-y-3' ref={chatBoxRef}>
+                                <AnimatePresence>
+                                  {messages?.map((msg,index)=>(
+                                    <motion.div
+                                    key={msg._id?.toString() || `msg-${index}`}
+                                    initial={{opacity:0, y: 15}}
+                                    animate={{opacity: 1, y:0}}
+                                    exit={{opacity:0}}
+                                    transition={{duration: 0.2}}
+                                    className={`flex ${msg.senderId==userData?._id ?"justify-end":"justify-start"}`}
+                                    >
+                                      <div className={`px-4 py-2 max-w-[75%] rounded-2xl shadow
+                                        ${
+                                          msg.senderId === userData?._id 
+                                          ?"bg-amber-500 text-white rounded-br-none"
+                                          :"bg-gray-100 text-gray-800 rounded-bl-none"
+                                        }`}>
+                                          <p>{msg.text}</p>
+                                          <p className='text-[10px] opacity-70 mt-1 text-right'>{msg.time}</p>
+                                      </div>
+                                    </motion.div>
+                                  ))}
+                                </AnimatePresence>
+                              </div>
 
                         <div className='flex gap-2 mt-3 border-t pt-3'>
                             <input

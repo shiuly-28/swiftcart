@@ -13,10 +13,9 @@ type props={
 function DeliveryChat({orderId,deliveryBoyId}:props) {
     const [newMessage, setNewMessage]=useState("")
     const [message, setMessage]=useState<IMessage[]>()
-    const chatBoxRef=useRef<HTMLDivElement>(null)
     const [suggestions, setsuggestions] = useState<string[]>([]);
     const [loading, setLoading]=useState(false)
-
+    const chatBoxRef=useRef<HTMLDivElement>(null)
     useEffect(()=>{
       const socket=getSocket()
       socket.emit("join-room", orderId)
@@ -26,7 +25,10 @@ function DeliveryChat({orderId,deliveryBoyId}:props) {
         }
        
       })
-    },[orderId])
+      return ()=>{
+        socket.off("send-messge")
+      }
+    },[])
 
     const sendMsg=()=>{
       const socket=getSocket()
@@ -42,6 +44,7 @@ function DeliveryChat({orderId,deliveryBoyId}:props) {
         })
       }
       socket.emit("send-message", message)
+      
       setNewMessage("")
     }
 
