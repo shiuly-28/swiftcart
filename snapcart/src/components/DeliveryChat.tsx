@@ -26,7 +26,7 @@ function DeliveryChat({orderId,deliveryBoyId}:props) {
        
       })
       return ()=>{
-        socket.off("send-messge")
+        socket.off("send-message")
       }
     },[])
 

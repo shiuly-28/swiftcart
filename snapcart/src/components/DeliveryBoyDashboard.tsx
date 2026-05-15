@@ -120,35 +120,57 @@ useEffect((): any => {
    fetchAssignments()
   },[userData])
 
-  const sendOtp = async ()=>{
-    setSendOtpLoading(true)
-    try{
-      const result=await axios.post("/api/delivery/otp/send", {orderId:activeOrder.order._id})
-      console.log(result.data)
-      setShowOtpBox(true)
-      setSendOtpLoading(false)
-    }
-    catch(error){
-      console.log(error)
-      setSendOtpLoading(false)
-    }
+ // ১. sendOtp ফাংশন সংশোধন
+const sendOtp = async () => {
+  // চেক করুন activeOrder এবং order অবজেক্ট আছে কি না
+  if (!activeOrder?.order?._id) {
+    console.error("No active order found to send OTP");
+    return;
   }
 
-  const veryfyOtp=async ()=>{
-    setVerifyOtpLoading(true)
-      try{
-      const result=await axios.post("/api/delivery/otp/verify", {orderId:activeOrder.order._id,otp})
-      console.log(result.data)
-      setActiveOrder(null)
-      setVerifyOtpLoading(false)
-      await fetchCurrentOrder()
-    }
-    catch(error){
-      setOtpError("Otp Verification Error")
-      setVerifyOtpLoading(false)
-    }
+  setSendOtpLoading(true);
+  try {
+    const result = await axios.post("/api/delivery/otp/send", { 
+      orderId: activeOrder.order._id 
+    });
+    console.log(result.data);
+    setShowOtpBox(true);
+  } catch (error) {
+    console.log(error);
+  } finally {
+    setSendOtpLoading(false);
+  }
+};
+
+// ২. veryfyOtp ফাংশন সংশোধন
+const veryfyOtp = async () => {
+  if (!activeOrder?.order?._id || !otp) {
+    setOtpError("Invalid Order or OTP");
+    return;
   }
 
+  setVerifyOtpLoading(true);
+  try {
+    const result = await axios.post("/api/delivery/otp/verify", { 
+      orderId: activeOrder.order._id, 
+      otp 
+    });
+    console.log(result.data);
+    
+    // OTP ভেরিফাই হওয়ার পর স্টেট ক্লিনআপ
+    setActiveOrder(null); 
+    setShowOtpBox(false);
+    setOtp("");
+    
+    // নতুন অর্ডারের জন্য পুনরায় রিফ্রেশ
+    await fetchCurrentOrder();
+    await fetchAssignments();
+  } catch (error) {
+    setOtpError("Otp Verification Error");
+  } finally {
+    setVerifyOtpLoading(false);
+  }
+};
   if(activeOrder && userLocation){
     return(
       <div className='p-4 pt-[120px] min-h-screen bg-gray-50 ' >
