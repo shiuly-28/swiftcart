@@ -127,15 +127,14 @@ if(data.orderId.toString()==order?._id!.toString()){
                     >Call</a>
                   </div>
                    <button className='w-full flex items-center justify-center gap-2 bg-amber-600 text-white
-                  font-semibold px-4 py-2 rounded-xl shadow hover:bg-amber-700 transition' onClick={()=>router.push(`/user/track-order/${order._id?.toString()}`)}><Truck size={18}/>Track Your Order</button>
+                  font-semibold px-4 py-2 rounded-xl shadow hover:bg-amber-700 transition'
+                   onClick={()=>router.push(`/user/track-order/${order._id?.toString()}`)}><Truck size={18}/>Track Your Order</button>
 
                   </>
 
                   }
 
-                 
-
-         <div className='flex items-center gap-2 text-gray-700 text-sm'>
+                  <div className='flex items-center gap-2 text-gray-700 text-sm'>
           <MapPin size={16} className='text-amber-500'/>
          
           <span className='truncate'>{order.address.fullAddress}</span>

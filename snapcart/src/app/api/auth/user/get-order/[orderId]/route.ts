@@ -6,7 +6,7 @@ export async function GET(req:NextRequest,{params}:{params:{orderId:string}}){
 try{
 await connectDb()
 const {orderId}=await params
-console.log(orderId)
+
 const order=await Order.findById(orderId).populate
 ("assignedDeliveryBoy")
 if(!order){

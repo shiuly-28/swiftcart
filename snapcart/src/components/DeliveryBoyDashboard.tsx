@@ -79,30 +79,30 @@ useEffect((): any => {
     })
     return () => socket.off("new-assignment")
   },[])
-
-  const handleAccept = async (id:string)=>{
-    try{
-      const result = await axios.get(`/api/delivery/assignment/${id}/accept-assignment`)
-      console.log(result)
-    }catch(error){
-      console.log(error)
+const handleAccept = async (id: string) => {
+    try {
+        const result = await axios.get(`/api/delivery/assignment/${id}/accept-assignment`)
+        console.log(result.data)
+        await fetchCurrentOrder()  // ← accept এর পরে active order load করো
+    } catch (error) {
+        console.log(error)
     }
-  }
+}
 
-  const fetchCurrentOrder=async ()=>{
-    try{
-      const result=await axios.get("/api/delivery/current-order")
-      if(result.data.active){
-        setActiveOrder(result.data.assignment)
-        setUserLocation({
-          latitude:result.data.assignment.order.address.latitude,
-          longitude:result.data.assignment.order.address.longitude
-        })
-      }
-    }catch(error){
-      console.log(error)
+ const fetchCurrentOrder = async () => {
+    try {
+        const result = await axios.get("/api/delivery/current-order")
+        if (result.data.active) {
+            setActiveOrder(result.data.assignment)
+            setUserLocation({
+                latitude: result.data.assignment?.order?.address?.latitude ?? 0,
+                longitude: result.data.assignment?.order?.address?.longitude ?? 0
+            })
+        }
+    } catch (error) {
+        console.log(error)
     }
-  }
+}
 
   useEffect(():any=>{
     const socket=getSocket()
@@ -122,24 +122,25 @@ useEffect((): any => {
 
  // ১. sendOtp ফাংশন সংশোধন
 const sendOtp = async () => {
-  // চেক করুন activeOrder এবং order অবজেক্ট আছে কি না
-  if (!activeOrder?.order?._id) {
-    console.error("No active order found to send OTP");
-    return;
-  }
+    console.log("activeOrder full data:", JSON.stringify(activeOrder, null, 2))  // ← এই line যোগ করো
+    
+    if (!activeOrder?.order?._id) {
+        console.error("No active order found to send OTP");
+        return;
+    }
 
-  setSendOtpLoading(true);
-  try {
-    const result = await axios.post("/api/delivery/otp/send", { 
-      orderId: activeOrder.order._id 
-    });
-    console.log(result.data);
-    setShowOtpBox(true);
-  } catch (error) {
-    console.log(error);
-  } finally {
-    setSendOtpLoading(false);
-  }
+    setSendOtpLoading(true);
+    try {
+        const result = await axios.post("/api/delivery/otp/send", { 
+            orderId: activeOrder.order._id 
+        });
+        console.log(result.data);
+        setShowOtpBox(true);
+    } catch (error) {
+        console.log(error);
+    } finally {
+        setSendOtpLoading(false);
+    }
 };
 
 // ২. veryfyOtp ফাংশন সংশোধন

@@ -17,21 +17,41 @@ export async function POST(req:NextRequest,{params}:{params:{orderId:string}}){
                 {status:400}
             )
         }
-        order.status=status
-        
-        let deliveryBoysPayload:any=[]
-        if(status==="out of delivery" && !order.assignment){
-            const {latitude, longitude}=order.address
-            const nearByDeliveryBoys=await User.find({
-                role:"deliveryBoy",
-                location:{
-                    $near:{
-                        $geometry:{type:"Point", coordinates:[Number(longitude),Number(latitude)]},
-                        $maxDistance:10000
-                    }
-                }
-            })
+       order.status = status
+
+let deliveryBoysPayload: any = []
+if (status === "out of delivery" && !order.assignment) {
+    const { latitude, longitude } = order.address
+    
+    const nearByDeliveryBoys = await User.find({
+        role: "deliveryBoy"
+        // location: {
+        //     $near: {
+        //         $geometry: { type: "Point", coordinates: [Number(longitude), Number(latitude)] },
+        //         $maxDistance: 10000
+        //     }
+        // }
+    })
+
+
+
             console.log(nearByDeliveryBoys)
+
+
+        //      order.status=status
+        
+        // let deliveryBoysPayload:any=[]
+        // if(status==="out of delivery" && !order.assignment){
+        //     const {latitude, longitude}=order.address
+        //     const nearByDeliveryBoys=await User.find({
+        //         role:"deliveryBoy",
+        //         location:{
+        //             $near:{
+        //                 $geometry:{type:"Point", coordinates:[Number(longitude),Number(latitude)]},
+        //                 $maxDistance:10000
+        //             }
+        //         }
+        //     })
 
             const nearByIds=nearByDeliveryBoys.map((b)=>b._id)
             // console.log(nearByIds)
@@ -47,7 +67,6 @@ export async function POST(req:NextRequest,{params}:{params:{orderId:string}}){
             const candidates=availableDeliveryBoys.map(b=>b._id)
             if(candidates.length == 0){
                 await order.save()
-
                 await emitEventHandler("order-status-update", {orderId:order._id, status:order.status})
 
 

@@ -28,7 +28,7 @@ function DeliveryChat({orderId,deliveryBoyId}:props) {
       return ()=>{
         socket.off("send-message")
       }
-    },[])
+    },[orderId])
 
     const sendMsg=()=>{
       const socket=getSocket()

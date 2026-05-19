@@ -108,31 +108,45 @@ function TrackerOrder({params}:{params:{orderId:string}}) {
     //   getAllMessages()
     // },[])
 
-    useEffect(() => {
-        const socket = getSocket();
-        socket.emit("join-room", orderId);
+    // useEffect(() => {
+    //     const socket = getSocket();
+    //     socket.emit("join-room", orderId);
 
-        const handleReceiveMessage = (message: IMessage) => {
-            if (message.roomId?.toString() === orderId?.toString()) {
-                setMessages((prev) => [...(prev || []), message]);
-            }
-        };
+    //     const handleReceiveMessage = (message: IMessage) => {
+    //         if (message.roomId?.toString() === orderId?.toString()) {
+    //             setMessages((prev) => [...(prev || []), message]);
+    //         }
+    //     };
 
-        const handleLocationUpdate = (data: any) => {
-            setDeliveryBoyLocation({
-                latitude: data.location?.coordinates?.[1] ?? data.location?.latitude,
-                longitude: data.location?.coordinates?.[0] ?? data.location?.longitude
-            });
-        };
+    //     const handleLocationUpdate = (data: any) => {
+    //         setDeliveryBoyLocation({
+    //             latitude: data.location?.coordinates?.[1] ?? data.location?.latitude,
+    //             longitude: data.location?.coordinates?.[0] ?? data.location?.longitude
+    //         });
+    //     };
 
-        socket.on("receive-message", handleReceiveMessage);
-        socket.on("updated-deliverryBoy-location", handleLocationUpdate);
+    //     socket.on("receive-message", handleReceiveMessage);
+    //     socket.on("updated-deliverryBoy-location", handleLocationUpdate);
 
-        return () => {
-            socket.off("receive-message", handleReceiveMessage);
-            socket.off("updated-deliverryBoy-location", handleLocationUpdate);
-        };
-    }, [orderId]);
+    //     return () => {
+    //         socket.off("receive-message", handleReceiveMessage);
+    //         socket.off("updated-deliverryBoy-location", handleLocationUpdate);
+    //     };
+    // }, [orderId]);
+
+    useEffect(():any=>{
+        const socket=getSocket()
+        socket.on("updated-deliverryBoy-location", (data)=>{
+            
+                setDeliveryBoyLocation({
+                    latitude:data.location.coordinates?.[1] ?? data.location.latitude,
+                    longitude:data.location.coordinates?.[0] ?? data.location.longitude,
+
+                })
+            })
+       
+        return ()=>socket.off("updated-deliverryBoy-location")
+    }, [order])
 
     const sendMsg = () => {
         if (!newMessage.trim()) return;
