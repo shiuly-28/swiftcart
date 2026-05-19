@@ -5,6 +5,7 @@ import connectDb from '@/lib/db';
 import Grocery from '@/models/grocery.model';
 import GroceryItemCard from './GroceryItemCard';
 import { FolderOpen } from 'lucide-react';
+import Footer from './Footer';
 
 async function UsersDashboard () {
     await connectDb()
@@ -19,8 +20,12 @@ async function UsersDashboard () {
             <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6'>
                  {plainGrocery.map((item:any, index:number)=>(
             <GroceryItemCard key={index } item={item}/>
+
             ))}
+
+            
             </div>
+            <Footer/>
            </div>
         </>
     );
