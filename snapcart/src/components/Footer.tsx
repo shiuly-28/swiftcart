@@ -8,9 +8,9 @@ export default function Footer() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="relative mt-20 border-t border-white/20 bg-gradient-to-b from-gray-900/90 to-black text-gray-300">
+    <footer className="relative mt-20 border-t border-white/20 bg-linear-to-b from-gray-900/90 to-black text-gray-300">
       {/* ইউনিক টপ কার্ভ এবং গ্লো ইফেক্ট */}
-      <div className="absolute top-0 left-1/2 -z-10 h-1 w-1/2 -translate-x-1/2 bg-gradient-to-r from-transparent via-amber-500/50 to-transparent blur-md" />
+      <div className="absolute top-0 left-1/2 -z-10 h-1 w-1/2 -translate-x-1/2 bg-linear-to-r from-transparent via-amber-500/50 to-transparent blur-md" />
 
       <div className="mx-auto max-w-7xl px-6 pt-16 pb-8">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-4">
@@ -18,7 +18,7 @@ export default function Footer() {
           {/* ব্র্যান্ড সেকশন (Glassmorphism Card Style) */}
           <div className="md:col-span-1 flex flex-col space-y-4">
             <Link href="/" className="flex items-center gap-2 text-xl font-bold text-white tracking-wide">
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-amber-400 to-amber-600 text-black shadow-md shadow-amber-500/20">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br from-amber-400 to-amber-600 text-black shadow-md shadow-amber-500/20">
                 <ShoppingBag size={18} />
               </div>
               <span>Swift<span className="text-amber-500">Cart</span></span>

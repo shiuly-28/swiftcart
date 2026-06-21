@@ -5,113 +5,93 @@ import Order from "@/models/order.model";
 import User from "@/models/user.models";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(req:NextRequest,{params}:{params:{orderId:string}}){
-    try{
+export async function POST(req: NextRequest, { params }: { params: { orderId: string } }) {
+    try {
         await connectDb()
-        const {orderId}=await params
-        const {status}=await req.json()
-        const order=await Order.findById(orderId).populate("user")
-        if(!order){
+        const { orderId } = await params
+        const { status } = await req.json()
+        const order = await Order.findById(orderId).populate("user")
+        if (!order) {
             return NextResponse.json(
-                {message:"order not found"},
-                {status:400}
+                { message: "order not found" },
+                { status: 400 }
             )
         }
-       order.status = status
+        order.status = status
 
-let deliveryBoysPayload: any = []
-if (status === "out of delivery" && !order.assignment) {
-    const { latitude, longitude } = order.address
-    
-    const nearByDeliveryBoys = await User.find({
-        role: "deliveryBoy"
-        // location: {
-        //     $near: {
-        //         $geometry: { type: "Point", coordinates: [Number(longitude), Number(latitude)] },
-        //         $maxDistance: 10000
-        //     }
-        // }
-    })
+        let deliveryBoysPayload: any = []
+        if (status === "out of delivery" && !order.assignment) {
+            const { latitude, longitude } = order.address
 
-
+            const nearByDeliveryBoys = await User.find({
+                role: "deliveryBoy"
+                // location: {
+                //     $near: {
+                //         $geometry: { type: "Point", coordinates: [Number(longitude), Number(latitude)] },
+                //         $maxDistance: 10000
+                //     }
+                // }
+            })
 
             console.log(nearByDeliveryBoys)
 
-
-        //      order.status=status
-        
-        // let deliveryBoysPayload:any=[]
-        // if(status==="out of delivery" && !order.assignment){
-        //     const {latitude, longitude}=order.address
-        //     const nearByDeliveryBoys=await User.find({
-        //         role:"deliveryBoy",
-        //         location:{
-        //             $near:{
-        //                 $geometry:{type:"Point", coordinates:[Number(longitude),Number(latitude)]},
-        //                 $maxDistance:10000
-        //             }
-        //         }
-        //     })
-
-            const nearByIds=nearByDeliveryBoys.map((b)=>b._id)
-            // console.log(nearByIds)
-            const busyIds=await DeliveryAssignment.find({
-                assignedTo:{$in:nearByIds},
-                status:{$nin:["brodcasted", "completed"]}
+            const nearByIds = nearByDeliveryBoys.map((b) => b._id)
+            const busyIds = await DeliveryAssignment.find({
+                assignedTo: { $in: nearByIds },
+                status: { $nin: ["brodcasted", "completed"] }
             }).distinct("assignedTo")
             console.log(busyIds)
-            const busyIdSet=new Set(busyIds.map(b=>String(b)))
-            const availableDeliveryBoys=nearByDeliveryBoys.filter(
-                b=>!busyIdSet.has(String(b._id))
+            const busyIdSet = new Set(busyIds.map(b => String(b)))
+            const availableDeliveryBoys = nearByDeliveryBoys.filter(
+                b => !busyIdSet.has(String(b._id))
             )
-            const candidates=availableDeliveryBoys.map(b=>b._id)
-            if(candidates.length == 0){
+            const candidates = availableDeliveryBoys.map(b => b._id)
+            if (candidates.length == 0) {
                 await order.save()
-                await emitEventHandler("order-status-update", {orderId:order._id, status:order.status})
-
+                await emitEventHandler("order-status-update", { orderId: order._id, status: order.status })
 
                 return NextResponse.json(
-                {message:"There is no available Delivery Boys"},
-                {status:200}
-            )
+                    { message: "There is no available Delivery Boys" },
+                    { status: 200 }
+                )
             }
 
-            const deliveryAssignment=await DeliveryAssignment.create({
+            const deliveryAssignment = await DeliveryAssignment.create({
                 order: order._id,
-                brodcastedTo:candidates,
-                status:"brodcasted"
+                brodcastedTo: candidates,
+                status: "brodcasted"
             })
 
             await deliveryAssignment.populate("order");
-            for(const boyId of candidates){
-                const boy=await User.findById(boyId)
-                if(boy.socketId){
-                    await emitEventHandler("new-assignment", deliveryAssignment,boy.socketId)
+            for (const boyId of candidates) {
+                const boy = await User.findById(boyId)
+                if (boy.socketId) {
+                    await emitEventHandler("new-assignment", deliveryAssignment, boy.socketId)
                 }
             }
 
-            order.assignment=deliveryAssignment._id,
-            deliveryBoysPayload=availableDeliveryBoys.map(b=>({
-            id:b._id,
-            name:b.name,
-            mobile:b.mobile,
-            latitude:b.location.coordinates[1],
-            longitude:b.location.coordinates[0]
-           }))
-           await deliveryAssignment.populate("order")
+            order.assignment = deliveryAssignment._id
+            deliveryBoysPayload = availableDeliveryBoys.map(b => ({
+                id: b._id,
+                name: b.name,
+                mobile: b.mobile,
+                latitude: b.location.coordinates[1],
+                longitude: b.location.coordinates[0]
+            }))
+            await deliveryAssignment.populate("order")
         }
-        
+
         await order.save()
         await order.populate("user")
-        await emitEventHandler("order-status-update", {orderId:order._id, status:order.status})
-        
+        await emitEventHandler("order-status-update", { orderId: order._id, status: order.status })
+
         return NextResponse.json({
-            assignment:order.assignment?._id,
-            availableBoys:deliveryBoysPayload
-        },{status:200})
-    }catch(error){
-          return NextResponse.json({
-           message:`updatde status error ${error}`
-        },{status:500})
+            assignment: order.assignment?._id,
+            availableBoys: deliveryBoysPayload
+        }, { status: 200 })
+    } catch (error) {
+        return NextResponse.json({
+            message: `updatde status error ${error}`
+        }, { status: 500 })
     }
 }

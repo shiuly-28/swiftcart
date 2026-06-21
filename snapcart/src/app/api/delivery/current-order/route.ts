@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
 import connectDb from "@/lib/db";
 import DeliveryAssignment from "@/models/deliveryAssignment.model";
-import Order from "@/models/order.model";  // ← এই line যোগ করো
+import Order from "@/models/order.model";
 import { NextResponse } from "next/server";
 
 export async function GET() {
@@ -15,7 +15,14 @@ export async function GET() {
             status: "assigned"
         }).populate("order").lean()
 
-        if (!activeAssignment) {
+        // assignment নেই বা order null (ভাঙা assignment) — দুটো ক্ষেত্রেই active false
+        if (!activeAssignment || !activeAssignment.order) {
+            if (activeAssignment) {
+                // ভাঙা assignment auto-completed করো যাতে delivery boy আর "busy" না দেখায়
+                await DeliveryAssignment.findByIdAndUpdate(activeAssignment._id, {
+                    status: "completed"
+                })
+            }
             return NextResponse.json({ active: false }, { status: 200 })
         }
 
