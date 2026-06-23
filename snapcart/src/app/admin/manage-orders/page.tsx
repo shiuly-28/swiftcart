@@ -67,7 +67,15 @@ function ManageOrders() {
         setOrders((prev)=>[newOrder,...prev!])
         // console.log(newOrder)
       })
-      return ()=>socket.off("new-order")
+      socket.on("order-assigned", ({orderId,assignedDeliveryBoy})=>{
+         setOrders((prev)=>prev?.map((o)=>(
+        o._id==orderId?{...o,assignedDeliveryBoy}:o
+       )))
+      })
+      return ()=>{
+        socket.off("new-order")
+        socket.off("order-assigned")
+      }
     },[])
 
   return (

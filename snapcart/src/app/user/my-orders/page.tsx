@@ -1,34 +1,53 @@
 "use client"
-import { IOrder } from '@/models/order.model'
 import axios from 'axios'
 import { ArrowLeft, PackageSearch } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { motion } from 'motion/react'
 import UserOrderCard from '@/components/UserOrderCard'
+import { getSocket } from '@/lib/socket'
+import mongoose from 'mongoose'
+import { IUser } from '@/models/user.models'
 
-// ========================================================
-// ১. ঠিক এই জায়গায় (কম্পোনেন্টের বাইরে) কোডটুকু বসিয়ে দিন
-// ========================================================
-interface IPopulatedUser {
-  _id: string;
-  name: string;
-  email: string;
-  mobile: string;
-  role: string;
+interface IOrder{
+    _id:mongoose.Types.ObjectId
+    user:mongoose.Types.ObjectId
+    items:[
+        {
+            grocery:mongoose.Types.ObjectId,
+            name:string,
+            price:string,
+            unit:string,
+            image:string
+            quantity:number
+        }
+    ]
+    isPaid:boolean
+    totalAmount:number,
+    paymentMethod:"cod" | "online"
+    address:{
+        fullName:string,
+        mobile:string,
+        city:string,
+        state:string,
+        pincode:string,
+        fullAddress:string,
+        latitude:number,
+        longitude:number
+    }
+    assignment?:mongoose.Schema.Types.ObjectId
+    assignedDeliveryBoy?:IUser
+    status:"pending" | "out of delivery" | "delivered",
+    createdAt?:Date
+    updated?:Date
 }
 
-interface IPopulatedOrder extends Omit<IOrder, 'user' | 'assignedDeliveryBoy'> {
-  user: IPopulatedUser | undefined;
-  assignedDeliveryBoy: IPopulatedUser | undefined;
-}
-// ========================================================
 
 function MyOrder() {
   const router = useRouter()
   
   // ২. স্টেটের ব্র্যাকেটের ভেতরের IOrder[] পরিবর্তন করে IPopulatedOrder[] করে দিন
-  const [orders, setOrders] = useState<IPopulatedOrder[]>([])
+  const [orders, setOrders] = useState<IOrder[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -44,6 +63,17 @@ function MyOrder() {
     }
     getMyOrders()
   }, [])
+
+
+  useEffect(() =>{
+    const socket=getSocket()
+    socket.on("order-assigned",({orderId,assignedDeliveryBoy})=>{
+       setOrders((prev)=>prev?.map((o)=>(
+        o._id==orderId?{...o,assignedDeliveryBoy}:o
+       )))
+    })
+    return ()=>{socket.off("order-assigned")}
+  },[])
 
   if (loading) {
     return (

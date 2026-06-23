@@ -76,6 +76,14 @@ function AdminOrderCard({order}:{order:IOrder}) {
                 <Package size={20}/>
                 Order #{order._id?.toString().slice(-6)}
             </p>
+            {status!="delivered" &&   <span className={`inline-block text-xs font-semibold px-3 py-1 rounded-full border ${
+                order.isPaid
+                ?"bg-amber-100 text-amber-600 border-amber-500"
+                :"bg-red-600 bg-red-100 border-red-300"
+            }`}>
+                {order.isPaid?"Paid":"unpaid"}
+            </span>}
+
             <span className={`inline-block text-xs font-semibold px-3 py-1 rounded-full border ${
                 order.isPaid
                 ?"bg-amber-100 text-amber-600 border-amber-500"
@@ -132,7 +140,8 @@ function AdminOrderCard({order}:{order:IOrder}) {
                 }`}>
                 {status}
             </span>
-            <select className='border border-gray-300 rounded-lg px-3 py-1 text-sm shadow-sm hover:border-amber-400 focus:ring-2
+            {
+              status!="delivered" &&    <select className='border border-gray-300 rounded-lg px-3 py-1 text-sm shadow-sm hover:border-amber-400 focus:ring-2
             focus:ring-amber-400 outline-none'
             value={status}
             onChange={(e)=>updateStatus(order._id?.toString(),e.target.value)}
@@ -142,7 +151,8 @@ function AdminOrderCard({order}:{order:IOrder}) {
                         <option key={st} value={st}>{st.toUpperCase()}</option>
                     ))
                 }
-            </select>
+            </select>}
+          
         </div>
       </div>
         <div className='border-t text-gray-300 mt-3 pt-3'>

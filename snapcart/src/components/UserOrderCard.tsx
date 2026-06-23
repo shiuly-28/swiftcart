@@ -83,15 +83,15 @@ if(data.orderId.toString()==order?._id!.toString()){
           <p className='text-gray-600'>{new Date(order.createdAt!).toLocaleString()}</p>
         </div>
         <div className='flex flex-wrap items-center gap-2'>
-          <span 
-          className={`px-3 py-1 text-xs font-semibold rounded-full border ${
+          {status!=="delivered" && <span className={`px-3 py-1 text-xs font-semibold rounded-full border ${
             order.isPaid
             ?"bg-amber-100 text-amber-600 border-amber-500"
             :"bg-red-100 text-red-700 border-amber-300"
           }`}
           >
             {order.isPaid?"Paid":"unpaid"}
-          </span>
+          </span>}
+          
           <span className={`px-3 py-1 text-xs font-semibold border rounded-full ${getStatusColor(
             status
           )}`}>
@@ -101,9 +101,7 @@ if(data.orderId.toString()==order?._id!.toString()){
 
       </div>
 
-       
-
-      <div className='p-5 space-y-4'>
+       {status=="delivered" && <div className='p-5 space-y-4'>
         {order.paymentMethod=="cod"?<div className='flex items-center gap-2 text-amber-500 text-sm '>
           <Truck size={16} className='text-amber-500'/>
           Cash On Delivery
@@ -192,10 +190,9 @@ if(data.orderId.toString()==order?._id!.toString()){
             Total: <span className='text-amber-500'>{order.totalAmount}</span>
           </div>
          </div>
-        </div>
+        </div> }
 
-        
-    </motion.div>
+      </motion.div>
   )
 }
 

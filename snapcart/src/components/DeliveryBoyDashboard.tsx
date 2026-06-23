@@ -200,7 +200,7 @@ const veryfyOtp = async () => {
           <div className='mt-4'>
             <input type="text" className='w-full py-3 border rounded-lg text-center'
             placeholder='Enter Otp' maxLength={4} onChange={(e)=>setOtp(e.target.value)}  value={otp}/>
-            <button className='w-full bg-pink-600 text-white py-3 rounded-lg mt-4'
+            <button className='w-full bg-amber-600 text-white py-3 rounded-lg mt-4'
              onClick={veryfyOtp}>{verifyOtpLoading?
               <Loader size={16} className='animate-spin text-white'/>: "Verify OTP"}</button>
             {otpError && <div className='text-red-600 mt-2'>{otpError}</div>}
