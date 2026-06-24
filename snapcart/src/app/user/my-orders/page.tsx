@@ -1,6 +1,6 @@
 "use client"
 import axios from 'axios'
-import { ArrowLeft, PackageSearch } from 'lucide-react'
+import { ArrowLeft, Loader, PackageSearch } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { motion } from 'motion/react'
@@ -78,7 +78,7 @@ function MyOrder() {
   if (loading) {
     return (
       <div className='flex items-center justify-center min-h-[50vh] text-gray-600'>
-        Loading your Orders....
+        <Loader size={20}/>
       </div>
     )
   }

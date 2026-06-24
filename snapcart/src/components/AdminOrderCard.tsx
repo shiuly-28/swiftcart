@@ -7,6 +7,7 @@ import Image from 'next/image'
 import axios from 'axios'
 import mongoose from 'mongoose'
 import { IUser } from '@/models/user.models'
+import { getSocket } from '@/lib/socket'
 
  interface IOrder{
     _id:mongoose.Types.ObjectId
@@ -61,6 +62,16 @@ function AdminOrderCard({order}:{order:IOrder}) {
       setStatus(order.status)
     }, [order])
 
+    useEffect(():any=>{
+    const socket=getSocket()
+    socket.on("order-status-update", (data)=>{
+    if(data.orderId.toString()==order?._id!.toString()){
+      setStatus(data.status)
+    }
+    })
+    return ()=>socket.off("order-status-update")
+      },[])
+
 
   return (
     <motion.div 
@@ -79,18 +90,18 @@ function AdminOrderCard({order}:{order:IOrder}) {
             {status!="delivered" &&   <span className={`inline-block text-xs font-semibold px-3 py-1 rounded-full border ${
                 order.isPaid
                 ?"bg-amber-100 text-amber-600 border-amber-500"
-                :"bg-red-600 bg-red-100 border-red-300"
+                :"bg-red-600 text-red-100 border-red-300"
             }`}>
                 {order.isPaid?"Paid":"unpaid"}
             </span>}
-
+{/* 
             <span className={`inline-block text-xs font-semibold px-3 py-1 rounded-full border ${
                 order.isPaid
                 ?"bg-amber-100 text-amber-600 border-amber-500"
-                :"bg-red-600 bg-red-100 border-red-300"
+                :"bg-red-600 text-red-100 border-red-300"
             }`}>
                 {order.isPaid?"Paid":"unpaid"}
-            </span>
+            </span> */}
             <p className='text-sm text-gray-500'>
                 {new Date(order.createdAt!).toLocaleDateString()}
             </p>
@@ -141,7 +152,7 @@ function AdminOrderCard({order}:{order:IOrder}) {
                 {status}
             </span>
             {
-              status!="delivered" &&    <select className='border border-gray-300 rounded-lg px-3 py-1 text-sm shadow-sm hover:border-amber-400 focus:ring-2
+              status!="delivered" &&  <select className='border border-gray-300 rounded-lg px-3 py-1 text-sm shadow-sm hover:border-amber-400 focus:ring-2
             focus:ring-amber-400 outline-none'
             value={status}
             onChange={(e)=>updateStatus(order._id?.toString(),e.target.value)}

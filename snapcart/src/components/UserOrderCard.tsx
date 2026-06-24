@@ -68,7 +68,9 @@ if(data.orderId.toString()==order?._id!.toString()){
   setStatus(data.status)
 }
 })
+return ()=>socket.off("order-status-update")
   },[])
+  
   return (
     <motion.div 
     initial={{opacity:0, y:15}}
@@ -89,7 +91,7 @@ if(data.orderId.toString()==order?._id!.toString()){
             :"bg-red-100 text-red-700 border-amber-300"
           }`}
           >
-            {order.isPaid?"Paid":"unpaid"}
+            {order.isPaid ? "Paid" : "unpaid"}
           </span>}
           
           <span className={`px-3 py-1 text-xs font-semibold border rounded-full ${getStatusColor(

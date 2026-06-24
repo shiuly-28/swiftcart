@@ -79,11 +79,12 @@ useEffect((): any => {
     })
     return () => socket.off("new-assignment")
   },[])
+
 const handleAccept = async (id: string) => {
     try {
         const result = await axios.get(`/api/delivery/assignment/${id}/accept-assignment`)
-        console.log(result.data)
-        await fetchCurrentOrder()  // ← accept এর পরে active order load করো
+        // console.log(result.data)
+        fetchCurrentOrder()  // ← accept এর পরে active order load করো
     } catch (error) {
         console.log(error)
     }
@@ -193,7 +194,7 @@ const veryfyOtp = async () => {
           <button
           onClick={sendOtp}
          className='w-full bg-amber-600 text-white rounded-lg py-3 text-center'
-         >{sendOtpLoading?<Loader size={16} className='animate-spin text-white'/>:"Mark As Delivered"}</button>
+         >{sendOtpLoading?<Loader size={16} className='animate-spin text-white text-center'/>:"Mark As Delivered"}</button>
         )}
         {
           showOtpBox && 
@@ -202,7 +203,7 @@ const veryfyOtp = async () => {
             placeholder='Enter Otp' maxLength={4} onChange={(e)=>setOtp(e.target.value)}  value={otp}/>
             <button className='w-full bg-amber-600 text-white py-3 rounded-lg mt-4'
              onClick={veryfyOtp}>{verifyOtpLoading?
-              <Loader size={16} className='animate-spin text-white'/>: "Verify OTP"}</button>
+              <Loader size={16} className='animate-spin text-white text-center'/>: "Verify OTP"}</button>
             {otpError && <div className='text-red-600 mt-2'>{otpError}</div>}
           </div>
         }
