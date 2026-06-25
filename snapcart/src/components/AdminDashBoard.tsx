@@ -1,10 +1,11 @@
 import React from 'react'
+import AdminDashboardClient from './AdminDashboardClient'
 
 function AdminDashBoard() {
   return (
-    <div>
-    
-    </div>
+   <>
+   <AdminDashboardClient/>
+   </>
   )
 }
 
