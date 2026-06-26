@@ -12,8 +12,14 @@ function AdminDashboardClient() {
         transition={{duration: 0.5}}
         className='text-3xl md:text-4xl font-bold text-amber-500'
         >
-            Admin Dashboard
+           🛒 Admin Dashboard
         </motion.h1>
+        <select className='border border-gray-300 rounded-lg px-4 py-2 text-sm focus:ring-2
+        focus:ring-amber-500 outline-none transition w-full sm:w-auto'>
+          <option value="last 7 days">Last 7 Days</option>
+          <option value="Today">Today</option>
+          <option value="total">Total</option>
+        </select>
       </div>
     </div>
   )
