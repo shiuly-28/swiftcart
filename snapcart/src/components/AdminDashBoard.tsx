@@ -8,11 +8,34 @@ import Grocery from '@/models/grocery.model'
 async function AdminDashBoard() {
   await connectDb()
   const orders = await Order.find({})
-  const user = await User.find({role:"user"})
+  const users = await User.find({role:"user"})
   const groceries=await Grocery.find({})
+
+  const totalOrders=orders.length
+  const totalCustomers=users.length
+  const pendingDelivers=orders.filter((o)=>o.status==="pending").length
+  const totalRevenue=orders.reduce((sum,o)=>sum+(o.totalAmount || 0),0)
+
+  const today = new Date()
+  const startOfToday=new Date(today)
+  startOfToday.setHours(0, 0, 0)
+
+  const sevenDaysAgo=new Date()
+  sevenDaysAgo.setDate(today.getDate()-6)
+
+  const todayOrders=orders.filter((o) =>new Date(o.createAt)>=startOfToday)
+  const todayRevenue=todayOrders.reduce((sum,o)=>sum+(o.totalAmount || 0),0)
+
+  const sevenDaysOrders=orders.filter((o)=>new Date(o.createAt)>=sevenDaysAgo)
+  const sevenDaysRevenue=sevenDaysOrders.reduce((sum,o)=>sum+(o.totalAmount || 0),0)
   return (
    <>
-   <AdminDashboardClient/>
+   <AdminDashboardClient
+   earning={{
+    today:todayRevenue,
+     sevenDays:sevenDaysRevenue,
+      total:totalRevenue
+   }}/>
    </>
   )
 }
