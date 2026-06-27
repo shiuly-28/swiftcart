@@ -2,6 +2,7 @@
 import React, { useState } from 'react'
 import {motion} from "motion/react"
 import { IndianRupee, Package, Truck, Users } from 'lucide-react'
+import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis } from 'recharts'
 
 type propType={
   earning:{
@@ -85,6 +86,18 @@ function AdminDashboardClient({earning, stats, chartData}:propType) {
             <p>{s.value}</p>
           </motion.div>
         })}
+      </div>
+
+      <div className='bg-white border border-gray-100 shadow-md p-5 mb-10 rounded-2xl'>
+        <h2 className='text-lg font-semibold text-gray-700 mb-4'>📈 Orders Overview (Last 7 Days)</h2>
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart data={chartData}>
+            <CartesianGrid stroke='#ccc' strokeDasharray="5 5"/>
+              <XAxis dataKey="day"/>
+              <Tooltip />
+              <Bar dataKey="orders" fill='#F59E0B' radius={[6, 6, 0,0]}/>
+          </BarChart>
+        </ResponsiveContainer>
       </div>
     </div>
   )
