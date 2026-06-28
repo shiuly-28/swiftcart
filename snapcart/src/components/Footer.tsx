@@ -1,7 +1,7 @@
 "use client"
 import React from 'react'
 import Link from 'next/link'
-import { ShoppingBag, Facebook, Twitter, Instagram, Mail, Phone, MapPin } from 'lucide-react'
+import { ShoppingBag, Facebook, Twitter, Instagram, Mail, Phone, MapPin, GitBranch, Github, Linkedin } from 'lucide-react'
 import { motion } from 'motion/react'
 
 export default function Footer() {
@@ -29,9 +29,9 @@ export default function Footer() {
             {/* সোশ্যাল আইকন */}
             <div className="flex gap-3 pt-2">
               {[
-                { icon: <Facebook size={16} />, href: "#" },
-                { icon: <Twitter size={16} />, href: "#" },
-                { icon: <Instagram size={16} />, href: "#" }
+                { icon: <Github size={16} />, href: "https://github.com/shiuly-28" },
+                { icon: <Linkedin size={16} />, href: "https://www.linkedin.com/in/halima-akhter-shiuly/" },
+                { icon: <Instagram size={16} />, href: "https://www.instagram.com/shulybd1245/" }
               ].map((social, i) => (
                 <motion.a
                   key={i}
