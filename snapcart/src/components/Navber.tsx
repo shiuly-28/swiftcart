@@ -65,7 +65,7 @@ function Navber({user}:{user:IUser}) {
           </div>
           <div className='flex flex-col gap-3 font-medium mt-6'>
             <Link href={"/admin/add-grocery"} className='flex items-center gap-6 bg-white text-black font-semibold px-4 py-2 rounded-full hover:bg-amber-600  transition-all'><PlusCircle className='w-5 h-5'/> Add Fresh Finds</Link>
-        <Link href={""}  className='flex items-center gap-6 bg-white text-black font-semibold px-4 py-2 rounded-full hover:bg-amber-600 transition-all'><Boxes/>Veiw Fresh Finds</Link>
+        <Link href={"/admin/view-grocery"}  className='flex items-center gap-6 bg-white text-black font-semibold px-4 py-2 rounded-full hover:bg-amber-600 transition-all'><Boxes/>Veiw Fresh Finds</Link>
         <Link href={"/admin/manage-orders"}  className='flex items-center gap-6 bg-white text-black font-semibold px-4 py-2 rounded-full hover:bg-amber-600 transition-all'><ClipboardListIcon/>Manage Orders</Link>
         
           </div>
@@ -112,7 +112,7 @@ function Navber({user}:{user:IUser}) {
       {user.role=="admin" && <>
       <div className='hidden md:flex gap-3'>
         <Link href={"/admin/add-grocery"} className='flex items-center gap-6 bg-white text-black font-semibold px-4 py-2 rounded-full hover:bg-amber-600  transition-all'><PlusCircle className='w-5 h-5'/> Add Fresh Finds</Link>
-        <Link href={""}  className='flex items-center gap-6 bg-white text-black font-semibold px-4 py-2 rounded-full hover:bg-amber-600 transition-all'><Boxes/>Veiw Fresh Finds</Link>
+        <Link href={"/admin/view-grocery"}  className='flex items-center gap-6 bg-white text-black font-semibold px-4 py-2 rounded-full hover:bg-amber-600 transition-all'><Boxes/>Veiw Fresh Finds</Link>
         <Link href={"/admin/manage-orders"}  className='flex items-center gap-6 bg-white text-black font-semibold px-4 py-2 rounded-full hover:bg-amber-600 transition-all'><ClipboardListIcon/>Manage Orders</Link>
         
       </div>
