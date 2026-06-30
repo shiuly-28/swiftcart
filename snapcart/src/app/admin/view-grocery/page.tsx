@@ -1,13 +1,15 @@
 'use client'
 import axios from 'axios'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import {motion} from 'motion/react'
 import { ArrowLeft, Package, Search } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { IGrocery } from '@/models/grocery.model'
 
 
 function ViewGrocery() {
     const router = useRouter()
+    const [groceries, setGroceries] = useState<IGrocery[]>()
     useEffect(()=>{
         const getGroceries=async ()=>{
             try{
@@ -46,6 +48,20 @@ function ViewGrocery() {
         <Search className='text-gray-500 w-5 h-5 mr-2'/>
         <input type='text' className='w-full outline-none text-gray-700 placeholder-gray-400'  placeholder='Search by name or category...' />
       </motion.form>
+
+      <div className='space-y-4'>
+        {groceries?.map((g, i)=>(
+          <motion.div 
+          key={i}
+          whileHover={{scale: 1.01}}
+          transition={{type: "spring", stiffness: 100}}
+          className='bg-white rounded-2xl shadow-md hover:flex-row flex-col sm:flex-row items-center sm:items-start
+          gap-5 p-5 transition-all'
+          >
+            
+          </motion.div>
+        ))}
+      </div>
     </div>
   )
 }
