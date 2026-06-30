@@ -5,6 +5,7 @@ import {motion} from 'motion/react'
 import { ArrowLeft, Package, Search } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { IGrocery } from '@/models/grocery.model'
+import Image from 'next/image'
 
 
 function ViewGrocery() {
@@ -14,7 +15,7 @@ function ViewGrocery() {
         const getGroceries=async ()=>{
             try{
                 const result=await axios.get("/api/admin/get-groceries")
-                console.log(result)
+                setGroceries(result.data)
             }catch(error){
                 console.log(error)
             }
@@ -22,7 +23,7 @@ function ViewGrocery() {
         getGroceries();
     }, [])
   return (
-    <div className='pt-4 w-[905] md:w-[85%] mx-auto pb-20'>
+    <div className='pt-4 w-[905px] md:w-[85%] mx-auto pb-20'>
       <motion.div
       initial={{opacity:0, x: -20}} 
       animate={{opacity:1, x: 0}}
@@ -58,7 +59,16 @@ function ViewGrocery() {
           className='bg-white rounded-2xl shadow-md hover:flex-row flex-col sm:flex-row items-center sm:items-start
           gap-5 p-5 transition-all'
           >
-            
+            <div className='relative w-full sm:w-44 aspect-square rounded-xl overflow-hidden 
+            border border-gray-200'>
+
+              <Image
+              src={g.image}
+              alt={g.name}
+              fill
+              className='object-cover hover:scale-110 transition-transform duration-500'
+              />
+            </div>
           </motion.div>
         ))}
       </div>
