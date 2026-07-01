@@ -11,6 +11,7 @@ import Image from 'next/image'
 function ViewGrocery() {
     const router = useRouter()
     const [groceries, setGroceries] = useState<IGrocery[]>()
+    const [editing, setEditing]=useState<IGrocery | null>(null)
     useEffect(()=>{
         const getGroceries=async ()=>{
             try{
@@ -116,7 +117,8 @@ function ViewGrocery() {
             ${g.price}/ <span className='text-gray-500 text-sm font-medium ml-1'>{g.unit}</span>
           </p>
       
-          <button className="bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium px-4 py-2 rounded-xl transition-colors flex justify-center items-center">
+          <button className="bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium
+           px-4 py-2 rounded-xl transition-colors flex justify-center items-center" onClick={()=>setEditing(g)}>
             <Pencil size={16} /> Edit
           </button>
         </div>
