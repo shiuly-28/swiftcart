@@ -1,8 +1,8 @@
 'use client'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
-import {motion} from 'motion/react'
-import { ArrowLeft, Package, Pencil, Search } from 'lucide-react'
+import {AnimatePresence, motion} from 'motion/react'
+import { ArrowLeft, Package, Pencil, Search, X } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { IGrocery } from '@/models/grocery.model'
 import Image from 'next/image'
@@ -12,6 +12,7 @@ function ViewGrocery() {
     const router = useRouter()
     const [groceries, setGroceries] = useState<IGrocery[]>()
     const [editing, setEditing]=useState<IGrocery | null>(null)
+    const [imagePreview, setImagePreview]=useState<string | null>(null)
     useEffect(()=>{
         const getGroceries=async ()=>{
             try{
@@ -23,6 +24,12 @@ function ViewGrocery() {
         }
         getGroceries();
     }, [])
+
+    useEffect(()=>{
+      if(editing){
+        setImagePreview(editing.image)
+      }
+    }, [editing])
   return (
     <div className='pt-4 w-[905px] md:w-[85%] mx-auto pb-20'>
       <motion.div
@@ -126,7 +133,45 @@ function ViewGrocery() {
     </motion.div>
   ))}
 </div>
-    </div>
+
+<AnimatePresence>
+  {editing && (
+    <motion.div
+    initial={{opacity: 0}}
+    animate={{opacity: 1}}
+    exit={{opacity: 0}}
+    className='fixed inset-0 bg-black/40 flex items-center justify-center z-40
+    backdrop-blur-sm px-4'
+    >
+      <motion.div 
+      initial={{y: 40, opacity: 0 }}
+      animate={{y: 0, opacity: 1}}
+      exit={{y: 40, opacity: 0}}
+      transition={{duration: 0.3}}
+      className='bg-white rounded-2xl shadow-2xl w-full max-w-md p-4 relative '
+      >
+        <div className='flex justify-between items-center mb-4'>
+          <h2 className='text-2xl font-bold text-amber-500 '>Edit Grocery</h2>
+          <button className='text-gray-600 hover:text-red-500'
+          onClick={()=>setEditing(null)}>
+            <X size={18}/>
+          </button>
+        </div>
+        <div className='relative aspect-square w-full rounded-lg overflow-hidden 
+        mb-4 border border-gray-200 group'>
+          {imagePreview && <Image
+          src={imagePreview}
+          alt={editing.name}
+          fill
+          className='object-cover'
+          />}
+        </div>
+
+      </motion.div>
+    </motion.div>
+  )}
+</AnimatePresence>
+</div>
   )
 }
 
