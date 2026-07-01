@@ -167,6 +167,19 @@ function ViewGrocery() {
           />}
         </div>
 
+        <div className='space-y-4'>
+          <input type="text"
+          placeholder='Enter Grocery Name'
+          value={editing.name}
+          onChange={(e)=>setEditing({...editing, name:e.target.value})}
+          className='w-full border border-gray-300 rounded-lg p-2.5
+          focus:right-2 focus:ring-amber-500 outline-none'/>
+          <select className='w-full border border-gray-300 rounded-lg p-2.3 focus:ring-2
+          focus:ring-amber-500 outline-none bg-white'>
+            <option>Select Category</option>
+          </select>
+        </div>
+
       </motion.div>
     </motion.div>
   )}
