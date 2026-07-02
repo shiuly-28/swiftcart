@@ -2,7 +2,7 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
-import { ArrowLeft, Package, Pencil, Search, Upload, X } from 'lucide-react'
+import { ArrowLeft, Loader, Package, Pencil, Search, Upload, X } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { IGrocery } from '@/models/grocery.model'
 import Image from 'next/image'
@@ -31,6 +31,9 @@ function ViewGrocery() {
   const [editing, setEditing] = useState<IGrocery | null>(null)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [backendImage, setBackendImage] = useState<Blob | null>(null)
+  const [loading, setLoading]=useState(false)
+  const [deleteLoading, setDeleteLoading]=useState(false)
+
 
   useEffect(() => {
     const getGroceries = async () => {
@@ -59,6 +62,7 @@ function ViewGrocery() {
   }
 
   const handleEdit=async ()=>{
+    setLoading(true)
       if(!editing)return
     try{
        const formData=new FormData()
@@ -71,15 +75,18 @@ function ViewGrocery() {
                 formData.append("image", backendImage)
             }
       const result=await axios.post("/api/admin/edit-grocery",formData)
+      setLoading(false)
       window.location.reload()
     }catch(error){
       console.log(error)
     }
   }
   const handleDelete=async ()=>{
+    setDeleteLoading(true)
       if(!editing)return
     try{
       const result=await axios.post("/api/admin/delete-grocery",{groceryId:editing._id})
+      setDeleteLoading(false)
       window.location.reload()
     }catch(error){
       console.log(error)
@@ -256,12 +263,16 @@ function ViewGrocery() {
 
               <div className='flex justify-end gap-2.5 mt-5 pt-3 border-t border-gray-100 bg-white sticky bottom-0'>
                 <button className='px-4 py-2 text-sm font-medium rounded-xl bg-amber-500 text-white hover:bg-amber-600 active:scale-95
-                 transition-all shadow-sm shadow-amber-500/20' onClick={handleEdit}>
-                  Edit Changes
+                 transition-all shadow-sm shadow-amber-500/20'
+                 onClick={handleEdit}
+                 disabled={loading}>
+                  {loading?<Loader size={14}/>:"Edit Changes"} 
                 </button>
                 <button className='px-4 py-2 text-sm font-medium rounded-xl bg-rose-50 text-rose-600
-                 hover:bg-rose-100 active:scale-95 transition-all' onClick={handleDelete}>
-                  Delete
+                 hover:bg-rose-100 active:scale-95 transition-all'
+                  onClick={handleDelete}>
+                  disabled={deleteLoading}
+                  {deleteLoading?<Loader size={14}/>:"Delete"} 
                 </button>
               </div>
 
