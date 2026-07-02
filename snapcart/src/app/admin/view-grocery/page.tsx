@@ -59,7 +59,31 @@ function ViewGrocery() {
   }
 
   const handleEdit=async ()=>{
-    
+      if(!editing)return
+    try{
+       const formData=new FormData()
+       formData.append("groceryId", editing!._id!.toString());
+            formData.append("name", editing?.name)
+            formData.append("category",editing?.category)
+            formData.append("price", editing?.price)
+            formData.append("unit", editing?.unit)
+            if(backendImage){
+                formData.append("image", backendImage)
+            }
+      const result=await axios.post("/api/admin/edit-grocery",formData)
+      window.location.reload()
+    }catch(error){
+      console.log(error)
+    }
+  }
+  const handleDelete=async ()=>{
+      if(!editing)return
+    try{
+      const result=await axios.post("/api/admin/delete-grocery",{groceryId:editing._id})
+      window.location.reload()
+    }catch(error){
+      console.log(error)
+    }
   }
 
   return (
@@ -231,10 +255,12 @@ function ViewGrocery() {
               </div>
 
               <div className='flex justify-end gap-2.5 mt-5 pt-3 border-t border-gray-100 bg-white sticky bottom-0'>
-                <button className='px-4 py-2 text-sm font-medium rounded-xl bg-amber-500 text-white hover:bg-amber-600 active:scale-95 transition-all shadow-sm shadow-amber-500/20'>
-                  Save Changes
+                <button className='px-4 py-2 text-sm font-medium rounded-xl bg-amber-500 text-white hover:bg-amber-600 active:scale-95
+                 transition-all shadow-sm shadow-amber-500/20' onClick={handleEdit}>
+                  Edit Changes
                 </button>
-                <button className='px-4 py-2 text-sm font-medium rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-100 active:scale-95 transition-all'>
+                <button className='px-4 py-2 text-sm font-medium rounded-xl bg-rose-50 text-rose-600
+                 hover:bg-rose-100 active:scale-95 transition-all' onClick={handleDelete}>
                   Delete
                 </button>
               </div>
