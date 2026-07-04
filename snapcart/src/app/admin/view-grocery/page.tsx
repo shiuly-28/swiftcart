@@ -26,15 +26,15 @@ const units = [
 
 function ViewGrocery() {
   const router = useRouter()
-  // 💡 শুরুতে undefined না রেখে খালি অ্যারে [] দেওয়া ভালো
   const [groceries, setGroceries] = useState<IGrocery[]>([]) 
   const [editing, setEditing] = useState<IGrocery | null>(null)
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [backendImage, setBackendImage] = useState<Blob | null>(null)
-  const [loading, setLoading]=useState(false)
-  const [deleteLoading, setDeleteLoading]=useState(false)
+  const [loading, setLoading] = useState(false)
+  const [deleteLoading, setDeleteLoading] = useState(false)
+  const [search, setSearch] = useState("")
 
-
+  // 🎯 এপিআই থেকে ডেটা লোড করা
   useEffect(() => {
     const getGroceries = async () => {
       try {
@@ -47,11 +47,11 @@ function ViewGrocery() {
     getGroceries();
   }, [])
 
-  useEffect(() => {
-    if (editing) {
-      setImagePreview(editing.image)
-    }
-  }, [editing])
+  // 🎯 স্টেট ছাড়াই রান-টাইমে রিয়েল-টাইম সার্চ ফিল্টারিং (এরর ফ্রি সমাধান)
+  const filteredGroceries = groceries?.filter((g) => {
+    const q = search.toLowerCase();
+    return g.name.toLowerCase().includes(q) || g.category.toLowerCase().includes(q);
+  }) || [];
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -61,40 +61,44 @@ function ViewGrocery() {
     }
   }
 
-  const handleEdit=async ()=>{
+  const handleEdit = async () => {
     setLoading(true)
-      if(!editing)return
-    try{
-       const formData=new FormData()
-       formData.append("groceryId", editing!._id!.toString());
-            formData.append("name", editing?.name)
-            formData.append("category",editing?.category)
-            formData.append("price", editing?.price)
-            formData.append("unit", editing?.unit)
-            if(backendImage){
-                formData.append("image", backendImage)
-            }
-      const result=await axios.post("/api/admin/edit-grocery",formData)
+    if (!editing) return
+    try {
+      const formData = new FormData()
+      formData.append("groceryId", editing!._id!.toString());
+      formData.append("name", editing?.name)
+      formData.append("category", editing?.category)
+      formData.append("price", String(editing?.price))
+      formData.append("unit", editing?.unit)
+      if (backendImage) {
+        formData.append("image", backendImage)
+      }
+      await axios.post("/api/admin/edit-grocery", formData)
       setLoading(false)
       window.location.reload()
-    }catch(error){
+    } catch (error) {
       console.log(error)
+      setLoading(false)
     }
   }
-  const handleDelete=async ()=>{
+
+  const handleDelete = async () => {
     setDeleteLoading(true)
-      if(!editing)return
-    try{
-      const result=await axios.post("/api/admin/delete-grocery",{groceryId:editing._id})
+    if (!editing) return
+    try {
+      await axios.post("/api/admin/delete-grocery", { groceryId: editing._id })
       setDeleteLoading(false)
       window.location.reload()
-    }catch(error){
+    } catch (error) {
       console.log(error)
+      setDeleteLoading(false)
     }
   }
 
   return (
     <div className='pt-4 md:w-[85%] mx-auto pb-20'>
+      {/* হেডার সেকশন */}
       <motion.div
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
@@ -112,19 +116,21 @@ function ViewGrocery() {
         </h1>
       </motion.div>
 
-      {/* 🛠️ এখানে w-full এবং gap-4 এর মাঝের স্পেস ঠিক করা হয়েছে */}
-      <motion.form
-        initial={{ opacity: 0, x: 10 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.4 }}
-        className='flex sm:flex-row items-center bg-white border border-gray-200 rounded-full px-5 py-3 shadow-sm mb-10 hover:shadow-lg transition-all max-w-lg mx-auto w-full gap-4'
-      >
+      {/* সার্চ সেকশন */}
+      <div className='flex sm:flex-row items-center bg-white border border-gray-200 rounded-full px-5 py-3 shadow-sm mb-10 hover:shadow-lg transition-all max-w-lg mx-auto w-full gap-4'>
         <Search className='text-gray-500 w-5 h-5 mr-2' />
-        <input type='text' className='w-full outline-none text-gray-700 placeholder-gray-400' placeholder='Search by name or category...' />
-      </motion.form>
+        <input 
+          type='text' 
+          className='w-full outline-none text-gray-700 placeholder-gray-400' 
+          placeholder='Search by name or category...'
+          onChange={(e) => setSearch(e.target.value)} 
+          value={search} 
+        />
+      </div>
 
+      {/* গ্রোসারি কার্ড লিস্ট */}
       <div className='space-y-4'>
-        {groceries?.map((g, i) => (
+        {filteredGroceries.map((g, i) => (
           <motion.div
             key={i}
             whileHover={{ scale: 1.01 }}
@@ -153,7 +159,10 @@ function ViewGrocery() {
 
                 <button 
                   className="bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium px-4 py-2 rounded-xl transition-colors flex justify-center items-center gap-1" 
-                  onClick={() => setEditing(g)}
+                  onClick={() => {
+                    setEditing(g);
+                    setImagePreview(g.image); // 🎯 বাটনে ক্লিকের সাথে প্রিভিউ সেট হবে
+                  }}
                 >
                   <Pencil size={16} /> Edit
                 </button>
@@ -163,6 +172,7 @@ function ViewGrocery() {
         ))}
       </div>
 
+      {/* এডিট মোডাল */}
       <AnimatePresence>
         {editing && (
           <motion.div
@@ -203,7 +213,6 @@ function ViewGrocery() {
                   <Upload size={20} />
                 </label>
                 
-                {/* 🛠️ এখানে onChange={handleImageUpload} যুক্ত করা হয়েছে */}
                 <input 
                   id="imageUpload" 
                   type="file" 
@@ -255,24 +264,24 @@ function ViewGrocery() {
                       <option value="">Select Unit</option>
                       {units.map((u, i) => (
                         <option key={i} value={u}>{u}</option>
-                      ))}
+                    ))}
                     </select>
                   </div>
                 </div>
               </div>
 
               <div className='flex justify-end gap-2.5 mt-5 pt-3 border-t border-gray-100 bg-white sticky bottom-0'>
-                <button className='px-4 py-2 text-sm font-medium rounded-xl bg-amber-500 text-white hover:bg-amber-600 active:scale-95
-                 transition-all shadow-sm shadow-amber-500/20'
-                 onClick={handleEdit}
-                 disabled={loading}>
-                  {loading?<Loader size={14}/>:"Edit Changes"} 
+                <button className='px-4 py-2 text-sm font-medium rounded-xl bg-amber-500 text-white hover:bg-amber-600 active:scale-95 transition-all shadow-sm shadow-amber-500/20'
+                  onClick={handleEdit}
+                  disabled={loading}>
+                  {loading ? <Loader size={14} className="animate-spin" /> : "Edit Changes"} 
                 </button>
-                <button className='px-4 py-2 text-sm font-medium rounded-xl bg-rose-50 text-rose-600
-                 hover:bg-rose-100 active:scale-95 transition-all'
-                  onClick={handleDelete}>
+                <button 
+                  className='px-4 py-2 text-sm font-medium rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-100 active:scale-95 transition-all'
+                  onClick={handleDelete}
                   disabled={deleteLoading}
-                  {deleteLoading?<Loader size={14}/>:"Delete"} 
+                >
+                  {deleteLoading ? <Loader size={14} className="animate-spin" /> : "Delete"} 
                 </button>
               </div>
 

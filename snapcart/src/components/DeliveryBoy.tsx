@@ -1,7 +1,9 @@
 import React from 'react'
 import DeliveryBoyDashboard from './DeliveryBoyDashboard'
+import { auth } from '@/auth'
 
-function DeliveryBoy() {
+async function DeliveryBoy() {
+  const session=await auth()
   return (
     <>
      <DeliveryBoyDashboard/>
