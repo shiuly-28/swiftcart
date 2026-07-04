@@ -5,11 +5,14 @@ import { AnimatePresence } from 'motion/react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { motion } from 'framer-motion';
-import React, { useEffect, useRef, useState } from 'react'
+import React, { FormEvent, useEffect, useRef, useState } from 'react'
 import { signOut } from 'next-auth/react';
 import { createPortal } from 'react-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
+import { useRouter } from 'next/navigation';
+
+
 
 interface IUser{
     _id:mongoose.Types.ObjectId
@@ -28,6 +31,8 @@ function Navber({user}:{user:IUser}) {
     const [searchberOpen, setSearchBarOpen]=useState(false)
     const [menuOpen, setMenuOpen]=useState(false)
     const {cartData}=useSelector((state:RootState)=>state.cart)
+    const [search, setSearch]=useState("")
+    const router=useRouter()
 
     useEffect(()=>{
       const handleClickOutside=(e:MouseEvent)=>{
@@ -39,6 +44,17 @@ function Navber({user}:{user:IUser}) {
       document.addEventListener("mousedown", handleClickOutside)
       return()=>document.removeEventListener("mousedown", handleClickOutside )
     },[])
+
+    const handleSearch=(e:FormEvent)=>{
+      e.preventDefault()
+      const query=search.trim()
+      if(!query){
+        return router.push("/")
+      }
+      router.push(`/?q=${encodeURIComponent(query)}`)
+      setSearch("")
+      setSearchBarOpen(false)
+    }
 
     const SideBar=menuOpen?createPortal(
       <AnimatePresence>
@@ -85,12 +101,15 @@ function Navber({user}:{user:IUser}) {
       <Link href={"/"} className='text-white font-extrabold text-2xl sm:text-3xl tracking-wide hover:scale-105 transitions-transform'>
       SwiftPick
       </Link>
-      {user.role=="user" &&  <form className='hidden md:flex items-center bg-white rounded-full px-4 py-2 max-w-lg shadow-md ml-auto border border-gray-100'>
+      {user.role=="user" &&  <form className='hidden md:flex items-center bg-white rounded-full px-4 py-2 max-w-lg shadow-md ml-auto border
+       border-gray-100' onSubmit={handleSearch}>
     <Search className='text-gray-500 w-5 h-5 mr-2' />
     <input 
       type="text" 
       placeholder='Search groceries...' 
       className='w-full outline-none text-sm' 
+      value={search}
+      onChange={(e)=>setSearch(e.target.value)}
     />
   </form> }
     {/* <div className="flex items-center w-full px-4 py-2">
@@ -189,8 +208,10 @@ function Navber({user}:{user:IUser}) {
 
         >
           <Search className='text-gray-500 w-5 h-5 mr-2'/>
-          <form className='grow'>
-            <input type="text" className='w-full outline-none text-gray-600'/>
+          <form className='grow' onSubmit={handleSearch}>
+            <input type="text" className='w-full outline-none text-gray-600'
+              placeholder='search groceries...' value={search}
+               onChange={(e)=>setSearch(e.target.value)}/>
           </form>
           <button onClick={()=>setMenuOpen(false)}>
             <X className='text-gray-500 w-5 h-5'/>

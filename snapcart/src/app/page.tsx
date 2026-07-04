@@ -1,4 +1,3 @@
-
 import { auth } from '@/auth'
 import EditRoleMobile from '@/components/EditRoleMobile'
 import Navber from '@/components/Navber'
@@ -7,15 +6,22 @@ import User from '@/models/user.models'
 import { redirect } from 'next/navigation'
 import AdminDashBoard from '@/components/AdminDashBoard'
 import DeliveryBoy from '@/components/DeliveryBoy'
-
-
-import React from 'react'
 import UsersDashboard from '@/components/UsersDashboard'
 import GeoUpdated from '@/components/GeoUpdated'
+import Grocery, { IGrocery } from '@/models/grocery.model'
+import Footer from '@/components/Footer'
 
 
 
-async function Home() {
+async function Home(props:{
+  searchParams:Promise<{
+    q:string
+  }>
+}) {
+
+  const searchParams=await props.searchParams
+  // console.log(searchParams)
+  
   await connectDb()
   const session=await auth()
   const user=await User.findById(session?.user?.id)
@@ -31,17 +37,34 @@ async function Home() {
       return<EditRoleMobile/>
     }
     const plainUser=JSON.parse(JSON.stringify(user))
-    // console.log(plainUser)
-    // console.log(user)
+  
+    let groceryList:IGrocery[]=[]
+
+    if(user.role==="user"){
+      if(searchParams.q){
+        groceryList=await Grocery.find({
+          $or:[
+            {name: {$regex: searchParams?.q || "", $options:"i" }},
+            {name: {$regex: searchParams?.q || "", $options:"i" }},
+          ]
+        })
+      }
+      else{
+        groceryList=await Grocery.find({})
+      }
+    }
+    
+  
   return (
     <>
       <Navber user={plainUser}/>
       <GeoUpdated userId={plainUser._id}/>
       {user.role == "user" ?(
-        <UsersDashboard/>
+        <UsersDashboard groceryList={groceryList}/>
       ): user.role == "admin" ? (
         <AdminDashBoard/>
       ) : <DeliveryBoy/> }
+      <Footer/>
     </>
   )
 }

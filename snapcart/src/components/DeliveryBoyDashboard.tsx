@@ -169,6 +169,7 @@ const veryfyOtp = async () => {
     // নতুন অর্ডারের জন্য পুনরায় রিফ্রেশ
     await fetchCurrentOrder();
     await fetchAssignments();
+    window.location.reload()
   } catch (error) {
     setOtpError("Otp Verification Error");
   } finally {
@@ -199,13 +200,13 @@ if(!activeOrder && assignments.length===0){
                         <YAxis/>
                         <Tooltip />
                         <Legend/>
-                        <Bar dataKey="earning" name="Earning"/>
+                        <Bar dataKey="earnings" name="Earning"/>
                         <Bar dataKey="deliveries" name="Deliveries"/>
                     </BarChart>
                   </ResponsiveContainer>
                   <p className='mt-4 text-lg font-bold text-amber-600'>{earning || 0} Earned Today</p>
-                  <button className='mt-4 w-full bg-amber-500 hover:bg-amber-700 text-white 
-                  py-2 rounded-lg'>Refresh Earning</button>
+                  <button className='mt-4 w-full bg-amber-500 hover:bg-amber-600 text-white 
+                  py-2 rounded-lg' onClick={()=>window.location.reload()}>Refresh Earning</button>
         </div>
       </div>
     </div>
