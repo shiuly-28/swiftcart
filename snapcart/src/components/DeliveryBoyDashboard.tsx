@@ -6,7 +6,9 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import DeliveryChat from './DeliveryChat'
 import dynamic from 'next/dynamic'
-import { Loader } from 'lucide-react'
+import {  Loader } from 'lucide-react'
+import { div } from 'motion/react-client'
+import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 
 const LiveMap = dynamic(() => import('@/components/LiveMap'), { 
     ssr: false,
@@ -18,7 +20,7 @@ interface Ilocation{
   longitude:number
 }
 
-function DeliveryBoyDashboard() {
+function DeliveryBoyDashboard({earning}:{earning:number}) {
   const [assignments, setAssignments] = useState<any[]>([])
   const {userData}=useSelector((state:RootState)=>state.user)
   const [activeOrder, setActiveOrder]=useState<any>(null)
@@ -173,7 +175,44 @@ const veryfyOtp = async () => {
     setVerifyOtpLoading(false);
   }
 };
+
+if(!activeOrder && assignments.length===0){
+  const todaysEarning=[
+    {name:"Today",
+      earning,
+      deliveries:earning/40
+    }
+  ]
+  return(
+    <div className='flex items-center justify-center min-h-screen bg-linear-to-br from-white
+    to-amber-50 p-6 mt-10'>
+      <div className='max-w-md w-full text-center'>
+        <h2 className='text-2xl font-bold text-gray-500'>No Active Deliveries🏬</h2>
+        <p className='text-gray-500 mb-5'>Stay online to receive new orders</p>
+
+        <div className='bg-white border rounded-xl shadow-xl p-6'>
+          <h2 className='font-medium text-amber-700 mb-2'>Today's Performance</h2>
+
+           <ResponsiveContainer width="100%" height={300}>
+                    <BarChart data={todaysEarning}>
+                        <XAxis dataKey="name"/>
+                        <YAxis/>
+                        <Tooltip />
+                        <Legend/>
+                        <Bar dataKey="earning" name="Earning"/>
+                        <Bar dataKey="deliveries" name="Deliveries"/>
+                    </BarChart>
+                  </ResponsiveContainer>
+                  <p className='mt-4 text-lg font-bold text-amber-600'>{earning || 0} Earned Today</p>
+                  <button className='mt-4 w-full bg-amber-500 hover:bg-amber-700 text-white 
+                  py-2 rounded-lg'>Refresh Earning</button>
+        </div>
+      </div>
+    </div>
+  )
+}
   if(activeOrder && userLocation){
+
     return(
       <div className='p-4 pt-[120px] min-h-screen bg-gray-50 ' >
         <div className='max-w-3xl mx-auto'>
