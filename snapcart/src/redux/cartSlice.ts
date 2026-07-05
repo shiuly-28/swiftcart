@@ -1,4 +1,4 @@
-import { DeliveryBoy } from '@/components/DeliveryBoy';
+import DeliveryBoy from '@/components/DeliveryBoy';
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import mongoose from "mongoose";
 

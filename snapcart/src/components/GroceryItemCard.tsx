@@ -49,7 +49,7 @@ function GroceryItemCard({item}:{item:IGrocery}) {
        {!cartItem?<motion.button className='mt-4 flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-600 text-white 
        p-1 rounded-full py-2'
        whileTap={{scale:0.96}}
-       onClick={()=>dispatch(addToCart({...item, quantity:1}))}
+       onClick={() => dispatch(addToCart({ ...item, _id: item._id!, quantity: 1 }))}
        >
         <ShoppingBag className='' size={16}/>Add to Cart
        </motion.button>:

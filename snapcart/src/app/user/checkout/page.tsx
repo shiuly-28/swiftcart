@@ -5,18 +5,14 @@ import { ArrowLeft, CreditCard, CreditCardIcon, Home, Loader2, LocateFixed, MapP
 import { useRouter } from 'next/navigation'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
-import { MapContainer, Marker, TileLayer, useMap } from 'react-leaflet'
-import L, { LatLngExpression, LeafletEvent, } from 'leaflet'
-import 'leaflet/dist/leaflet.css';
+
 import axios from 'axios'
-import { OpenStreetMapProvider } from 'leaflet-geosearch'
+
 import { input } from 'motion/react-client'
 
-const markerIcon=new L.Icon({
-  iconUrl:"https://cdn-icons-png.flaticon.com/128/684/684908.png",
-  iconSize:[40,40],
-  iconAnchor:[20,40]
-})
+import dynamic from 'next/dynamic'
+
+const CheckoutMap=dynamic(()=>import("@/components/CheckoutMap"),{ssr:false})
 
 function Checkout() {
   const router = useRouter()
@@ -57,28 +53,11 @@ function Checkout() {
    }
   },[userData])
 
-  const DraggableMarker:React.FC=()=>{
-    const map=useMap()
-    useEffect(()=>{
-      map.setView(position as LatLngExpression, 15,{animate:true})
-    },[position,map])
 
-    return   <Marker 
-   icon={markerIcon}
-    position={position as LatLngExpression}
-    draggable={true}
-    eventHandlers={{
-      dragend:(e:LeafletEvent)=>{
-        const marker=e.target as L.Marker
-        const{lat,lng}=marker.getLatLng()
-        setPosition([lat,lng])
-      }
-    }}
-    />
-  }
 
   const handleSearchQuery=async()=>{
     setSearchLoading(true)
+    const {OpenStreetMapProvider}= await import("leaflet-geosearch")
     const provider=new OpenStreetMapProvider()
     const results = await provider.search({query:searchQuery});
     if(results){
@@ -272,16 +251,7 @@ function Checkout() {
               </div>
               <div className='relative mt-6 h-[330px] rounded-xl overflow-hidden border border-gray-300 shadow-inner'>
 
-                {position && <MapContainer center={position as LatLngExpression} zoom={13} 
-     scrollWheelZoom={true} className='w-full h-full'>
-    <TileLayer
-      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-    />
-    <DraggableMarker/>
-
- 
-  </MapContainer> }
+                {position && <CheckoutMap position={position} setPosition={setPosition}/> }
    
 <motion.button
 whileTap={{scale:0.93}}

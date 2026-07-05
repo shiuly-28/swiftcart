@@ -7,6 +7,13 @@ import { useRouter } from 'next/navigation'
 import { IGrocery } from '@/models/grocery.model'
 import Image from 'next/image'
 
+// 🎯 ওমিট (Omit) ব্যবহার করে টাইপস্ক্রিপ্টকে বলে দেওয়া হলো editing স্টেটের _id হবে string এবং price হবে number বা empty স্ট্রিং।
+// এর ফলে ObjectId এর টাইপ এররটি চিরতরে দূর হয়ে যাবে।
+interface IEditingGrocery extends Omit<IGrocery, 'price' | '_id'> {
+  _id: string;
+  price: number | '';
+}
+
 const categories = [
   "Fruits & Vegetable",
   "Dairy & Eggs",
@@ -27,7 +34,7 @@ const units = [
 function ViewGrocery() {
   const router = useRouter()
   const [groceries, setGroceries] = useState<IGrocery[]>([]) 
-  const [editing, setEditing] = useState<IGrocery | null>(null)
+  const [editing, setEditing] = useState<IEditingGrocery | null>(null) // 🎯 কাস্টম টাইপটি এখানে ব্যবহার করা হলো
   const [imagePreview, setImagePreview] = useState<string | null>(null)
   const [backendImage, setBackendImage] = useState<Blob | null>(null)
   const [loading, setLoading] = useState(false)
@@ -47,7 +54,7 @@ function ViewGrocery() {
     getGroceries();
   }, [])
 
-  // 🎯 স্টেট ছাড়াই রান-টাইমে রিয়েল-টাইম সার্চ ফিল্টারিং (এরর ফ্রি সমাধান)
+  // 🎯 ফিল্টারিং লজিক
   const filteredGroceries = groceries?.filter((g) => {
     const q = search.toLowerCase();
     return g.name.toLowerCase().includes(q) || g.category.toLowerCase().includes(q);
@@ -66,7 +73,7 @@ function ViewGrocery() {
     if (!editing) return
     try {
       const formData = new FormData()
-      formData.append("groceryId", editing!._id!.toString());
+      formData.append("groceryId", editing._id); // 🎯 এখন সরাসরি স্ট্রিং হিসেবে পাস হচ্ছে
       formData.append("name", editing?.name)
       formData.append("category", editing?.category)
       formData.append("price", String(editing?.price))
@@ -107,11 +114,11 @@ function ViewGrocery() {
       >
         <button
           onClick={() => router.push("/")}
-          className='flex items-center justify-center gap-2 bg-amber-100 hover:bg-amber-200 text-amber-600 font-semibold px-4 rounded-full transition w-full sm:w-auto'
+          className='flex items-center justify-center gap-2 bg-amber-100 hover:bg-amber-200 text-amber-600 font-semibold px-4 py-2 rounded-full transition w-full sm:w-auto'
         >
           <ArrowLeft size={18} /><span>Back</span>
         </button>
-        <h1 className='text-2xl md:text-3xl font-extrabold text-amber-600 flex items-center'>
+        <h1 className='text-2xl md:text-3xl font-extrabold text-amber-600 flex items-center gap-2'>
           <Package size={30} className='text-amber-600' />Manage Groceries
         </h1>
       </motion.div>
@@ -160,8 +167,13 @@ function ViewGrocery() {
                 <button 
                   className="bg-amber-500 hover:bg-amber-600 text-white text-sm font-medium px-4 py-2 rounded-xl transition-colors flex justify-center items-center gap-1" 
                   onClick={() => {
-                    setEditing(g);
-                    setImagePreview(g.image); // 🎯 বাটনে ক্লিকের সাথে প্রিভিউ সেট হবে
+                    // 🎯 টাইপসেফলি অবজেক্ট এসাইন করা হলো এবং আইডি ও প্রাইস পারফেক্টলি হ্যান্ডেল করা হলো
+                    setEditing({
+                      ...g,
+                      _id: g._id ? g._id.toString() : "",
+                      price: typeof g.price === 'string' ? Number(g.price) : g.price
+                    });
+                    setImagePreview(g.image); 
                   }}
                 >
                   <Pencil size={16} /> Edit
@@ -250,8 +262,8 @@ function ViewGrocery() {
                     <label className='text-xs font-medium text-gray-500 block mb-1'>Price ($)</label>
                     <input type="number"
                       placeholder='Price'
-                      value={editing.price || ''}
-                      onChange={(e) => setEditing({ ...editing, price: Number(e.target.value) })}
+                      value={editing.price === '' ? '' : editing.price}
+                      onChange={(e) => setEditing({ ...editing, price: e.target.value === '' ? '' : Number(e.target.value) })} 
                       className='w-full border border-gray-300 rounded-xl p-2 text-sm focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 outline-none transition-all' />
                   </div>
 
@@ -264,7 +276,7 @@ function ViewGrocery() {
                       <option value="">Select Unit</option>
                       {units.map((u, i) => (
                         <option key={i} value={u}>{u}</option>
-                    ))}
+                      ))}
                     </select>
                   </div>
                 </div>
@@ -293,4 +305,4 @@ function ViewGrocery() {
   )
 }
 
-export default ViewGrocery
+export default ViewGrocery;
