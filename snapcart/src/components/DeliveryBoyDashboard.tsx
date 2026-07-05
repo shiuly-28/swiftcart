@@ -192,7 +192,7 @@ if(!activeOrder && assignments.length===0){
         <p className='text-gray-500 mb-5'>Stay online to receive new orders</p>
 
         <div className='bg-white border rounded-xl shadow-xl p-6'>
-          <h2 className='font-medium text-amber-700 mb-2'>Today's Performance</h2>
+          <h2 className='font-medium text-amber-700 mb-2'>Todays Performance</h2>
 
            <ResponsiveContainer width="100%" height={300}>
                     <BarChart data={todaysEarning}>

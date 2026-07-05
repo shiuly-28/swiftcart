@@ -54,7 +54,10 @@ const Footer = () => {
       </div>
       </div>
 
-      <div></div>
+      <div className="text-center py-4 text-sm text-amber-100 bg-amber-700/40">
+  © {new Date().getFullYear()}{" "}
+  <span className="font-semibold">SwiftCart</span>. All rights reserved.
+</div>
       
     </motion.div>
   );
