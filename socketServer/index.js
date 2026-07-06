@@ -13,7 +13,12 @@ const port=process.env.PORT || 5000
 
 const io=new Server(server,{
     cors:{
-        origin:process.env.NEXT_BASE_URL
+        origin:[
+            process.env.NEXT_BASE_URL,
+            "https://swiftcart-nine-eta.vercel.app",
+            "http://localhost:3000"
+        ],
+        methods:["GET","POST"]
     }
 })
 
