@@ -1,6 +1,5 @@
 "use client";
 import { Boxes, ClipboardListIcon, Cross, LogOut, Menu, MenuIcon, Package, Plus, PlusCircle, Search, ShoppingBag, ShoppingCartIcon, Sidebar, User, X } from 'lucide-react'
-import mongoose from 'mongoose'
 import { AnimatePresence } from 'motion/react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -15,7 +14,7 @@ import { useRouter } from 'next/navigation';
 
 
 interface IUser{
-    _id:mongoose.Types.ObjectId
+    _id:string
     name:string
     email:string
     password?:string

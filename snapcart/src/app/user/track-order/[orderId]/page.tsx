@@ -4,7 +4,7 @@ import { getSocket } from '@/lib/socket';
 import { IUser } from '@/models/user.models';
 import axios from 'axios';
 import { ArrowLeftIcon, Loader, Send, Sparkle } from 'lucide-react';
-import mongoose from 'mongoose';
+
 import { useParams, useRouter } from 'next/navigation';
 import React, { useEffect, useState, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -19,8 +19,8 @@ const LiveMap = dynamic(() => import('@/components/LiveMap'), {
 });
 
 interface IOrder {
-    _id: mongoose.Types.ObjectId;
-    user: mongoose.Types.ObjectId;
+    _id: string;
+    user: string;
     items: any[];
     address: {
         latitude: number;
@@ -172,7 +172,7 @@ function TrackerOrder({params}:{params:{orderId:string}}) {
 const getSuggestion=async ()=>{
   setLoading(true)
   try{
-    const lastMessage=messages?.filter(m=>m.senderId!==userData?._id)?.at(-1)
+    const lastMessage=messages?.filter(m=>m.senderId.toString()!==userData?._id)?.at(-1)
     const result=await axios.post("/api/chat/ai-suggestions",
       {message:lastMessage?.text,role:"user"})
       setsuggestions(result.data)
@@ -259,11 +259,11 @@ const getSuggestion=async ()=>{
                                     animate={{opacity: 1, y:0}}
                                     exit={{opacity:0}}
                                     transition={{duration: 0.2}}
-                                    className={`flex ${msg.senderId==userData?._id ?"justify-end":"justify-start"}`}
+                                    className={`flex ${msg.senderId.toString()==userData?._id ?"justify-end":"justify-start"}`}
                                     >
                                       <div className={`px-4 py-2 max-w-[75%] rounded-2xl shadow
                                         ${
-                                          msg.senderId === userData?._id 
+                                          msg.senderId.toString() === userData?._id 
                                           ?"bg-amber-500 text-white rounded-br-none"
                                           :"bg-gray-100 text-gray-800 rounded-bl-none"
                                         }`}>

@@ -12,11 +12,11 @@ import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 
  interface IOrder{
-    _id:mongoose.Types.ObjectId
-    user:mongoose.Types.ObjectId
+    _id:string
+    user:string
     items:[
         {
-            grocery:mongoose.Types.ObjectId,
+            grocery:string,
             name:string,
             price:string,
             unit:string,
@@ -37,7 +37,7 @@ import React, { useEffect, useState } from 'react'
         latitude:number,
         longitude:number
     }
-    assignment?:mongoose.Schema.Types.ObjectId
+    assignment?:string
     assignedDeliveryBoy?:IUser
     status:"pending" | "out of delivery" | "delivered",
     createdAt?:Date

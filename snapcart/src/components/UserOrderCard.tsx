@@ -5,16 +5,16 @@ import { ChevronDown, ChevronUp, CreditCard, MapPin, Package, Truck, UserCheck }
 import { div } from 'motion/react-client'
 import Image from 'next/image'
 import { getSocket } from '@/lib/socket'
-import mongoose from 'mongoose'
+
 import { IUser } from '@/models/user.models'
 import { useRouter } from 'next/navigation'
 
  interface IOrder{
-    _id:mongoose.Types.ObjectId
-    user:mongoose.Types.ObjectId
+    _id:string
+    user:string
     items:[
         {
-            grocery:mongoose.Types.ObjectId,
+            grocery:string,
             name:string,
             price:string,
             unit:string,
@@ -35,7 +35,7 @@ import { useRouter } from 'next/navigation'
         latitude:number,
         longitude:number
     }
-    assignment?:mongoose.Schema.Types.ObjectId
+    assignment?:string
     assignedDeliveryBoy?:IUser
     status:"pending" | "out of delivery" | "delivered",
     createdAt?:Date

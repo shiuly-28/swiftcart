@@ -1,9 +1,9 @@
 import DeliveryBoy from '@/components/DeliveryBoy';
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import mongoose from "mongoose";
+
 
 interface IGrocery{
-    _id:mongoose.Types.ObjectId,
+    _id:string,
     name:string,
     category:string,
     price:string,
@@ -36,7 +36,7 @@ const cartSlice=createSlice({
             state.cartData.push(action.payload)
             cartSlice.caseReducers.calculateTotal(state)
         },
-        increaseQuantity:(state, action:PayloadAction<mongoose.Types.ObjectId>)=>{
+        increaseQuantity:(state, action:PayloadAction<string>)=>{
         
               const item=state.cartData.find(i=>i._id==action.payload)
             if(item){
@@ -45,7 +45,7 @@ const cartSlice=createSlice({
             cartSlice.caseReducers.calculateTotal(state)
           }
           ,
-          decreaseQuantity:(state, action:PayloadAction<mongoose.Types.ObjectId>)=>{
+          decreaseQuantity:(state, action:PayloadAction<string>)=>{
             const item=state.cartData.find(i=>i._id==action.payload)
             if(item?.quantity && item?.quantity-1){
                 item.quantity=item.quantity-1
@@ -55,7 +55,7 @@ const cartSlice=createSlice({
             cartSlice.caseReducers.calculateTotal(state)
           },
 
-          removeFromCart:(state, action:PayloadAction<mongoose.Types.ObjectId>)=>{
+          removeFromCart:(state, action:PayloadAction<string>)=>{
            state.cartData=state.cartData.filter(i=>i._id!==action.payload)
            cartSlice.caseReducers.calculateTotal(state)
           },
