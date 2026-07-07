@@ -1,14 +1,14 @@
 import connectDb from "@/lib/db";
 import User from "@/models/user.models";
-import { NextRequest, NextResponse } from "next/server"; // 🎯 NextRequest ইম্পোর্ট করা হলো
+import { NextRequest, NextResponse } from "next/server";
 
-// 🎯 প্যারামিটার টাইপ NextResponse থেকে পরিবর্তন করে NextRequest করা হলো
+
 export async function POST(req: NextRequest){
     try {
         await connectDb()
         const { userId, socketId } = await req.json()
         
-        // 🎯 মঙ্গুজের ডিপিসিয়েটেড ওয়ার্নিং দূর করতে { returnDocument: 'after' } ব্যবহার করা হলো
+    
         const user = await User.findByIdAndUpdate(userId, {
             socketId,
             isOnline: true

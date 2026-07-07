@@ -54,7 +54,7 @@ function TrackerOrder({params}:{params:{orderId:string}}) {
           "hello", "thank you", "hill"
         ])
 
-    // অটো স্ক্রল লজিক
+   
     useEffect(() => {
         if (scrollRef.current) {
             scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
@@ -96,43 +96,6 @@ function TrackerOrder({params}:{params:{orderId:string}}) {
         }
     }, []);
 
-    //   useEffect(()=>{
-    //   const getAllMessages=async ()=>{
-    //     try{
-    //       const result=await axios.post("/api/chat/messages",{roomId:orderId})
-    //       setMessages(result.data)
-    //     }catch(error){
-    //       console.log(error)
-    //     }
-    //   }
-    //   getAllMessages()
-    // },[])
-
-    // useEffect(() => {
-    //     const socket = getSocket();
-    //     socket.emit("join-room", orderId);
-
-    //     const handleReceiveMessage = (message: IMessage) => {
-    //         if (message.roomId?.toString() === orderId?.toString()) {
-    //             setMessages((prev) => [...(prev || []), message]);
-    //         }
-    //     };
-
-    //     const handleLocationUpdate = (data: any) => {
-    //         setDeliveryBoyLocation({
-    //             latitude: data.location?.coordinates?.[1] ?? data.location?.latitude,
-    //             longitude: data.location?.coordinates?.[0] ?? data.location?.longitude
-    //         });
-    //     };
-
-    //     socket.on("receive-message", handleReceiveMessage);
-    //     socket.on("updated-deliverryBoy-location", handleLocationUpdate);
-
-    //     return () => {
-    //         socket.off("receive-message", handleReceiveMessage);
-    //         socket.off("updated-deliverryBoy-location", handleLocationUpdate);
-    //     };
-    // }, [orderId]);
 
     useEffect(():any=>{
         const socket=getSocket()
@@ -228,27 +191,6 @@ const getSuggestion=async ()=>{
           </motion.div>
         ))}
       </div>
-
-         {/* <div  className='flex-1 overflow-y-auto p-2 space-y-3 scroll-smooth' ref=
-                        {chatBoxRef}>
-                            <AnimatePresence>
-                                {messages.map((msg, index) => (
-                                    <motion.div
-                                        key={msg._id?.toString() || index}
-                                        initial={{ opacity: 0, y: 15 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        className={`flex ${msg.senderId === userData?._id ? "justify-end" : "justify-start"}`}
-                                    >
-                                        <div className={`px-4 py-2 max-w-[75%] rounded-2xl shadow ${
-                                            msg.senderId === userData?._id ? "bg-amber-500 text-white rounded-br-none" : "bg-gray-100 text-gray-800 rounded-bl-none"
-                                        }`}>
-                                            <p>{msg.text}</p>
-                                            <p className='text-[10px] opacity-70 mt-1 text-right'>{msg.time}</p>
-                                        </div>
-                                    </motion.div>
-                                ))}
-                            </AnimatePresence>
-                        </div> */}
 
                         <div className='flex-1 overflow-x-auto p-2 space-y-3' ref={chatBoxRef}>
                                 <AnimatePresence>

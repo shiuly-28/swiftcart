@@ -10,9 +10,11 @@ export const dynamic = 'force-dynamic';
 
 const stripeSecret = process.env.STRIPE_SECRET_KEY;
 
-const stripe = new Stripe(stripeSecret || '', {
-    apiVersion: '2025-05-28.basil' as any, 
-});
+// const stripe = new Stripe(stripeSecret || '', {
+//     apiVersion: '2025-05-28.basil' as any, 
+// });
+
+const stripe = new Stripe(stripeSecret || '');
 
 export async function POST(req: NextRequest) {
     try {

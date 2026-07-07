@@ -45,8 +45,7 @@ interface IOrder{
 
 function MyOrder() {
   const router = useRouter()
-  
-  // ২. স্টেটের ব্র্যাকেটের ভেতরের IOrder[] পরিবর্তন করে IPopulatedOrder[] করে দিন
+
   const [orders, setOrders] = useState<IOrder[]>([])
   const [loading, setLoading] = useState(true)
 
