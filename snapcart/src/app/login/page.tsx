@@ -23,16 +23,35 @@ const Login = () => {
     e.preventDefault()
     setLoading(true)
     try{
-      await signIn("credentials",{
-        email,password
+      const result = await signIn("credentials",{
+        email,
+        password,
+        redirect: false,
       })
-      router.push("/")
+      
+      if(result?.error){
+        console.log("Login error:", result.error)
+        setLoading(false)
+        return
+      }
+
+      // session থেকে role নাও
+      const res = await fetch("/api/auth/session")
+      const session = await res.json()
+      const role = session?.user?.role
+
+      if(role === "admin") router.push("/admin")
+      else if(role === "deliveryBoy") router.push("/delivery")
+      else if(role === "user") router.push("/user/cart")
+      else router.push("/select-role")
+      
+      router.refresh()
       setLoading(false)
     }catch(error){
       console.log(error)
       setLoading(false)
     }
-  }
+}
  
     return (
         <div className='flex flex-col items-center justify-center min-h-screen px-6 bg-white relative'>
