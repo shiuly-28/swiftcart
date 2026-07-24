@@ -74,26 +74,28 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return true;
     },
     jwt({ token, user, trigger, session }) {
-      if (user) {
-        token.id = user.id;
-        token.name = user.name;
-        token.email = user.email;
-        token.role = user.role;
-      }
-      if (trigger === "update" && session?.role) {
-        token.role = session.role;
-      }
-      return token;
-    },
-    session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.id as string;
-        session.user.name = token.name as string;
-        session.user.email = token.email as string;
-        session.user.role = token.role as string;
-      }
-      return session;
-    },
+  if (user) {
+    token.id = user.id;
+    token.name = user.name as string;
+    token.email = user.email as string;
+    token.role = (user as any).role || "";
+    console.log("JWT token role:", token.role); // যোগ করো
+  }
+  if (trigger === "update" && session?.role) {
+    token.role = session.role;
+  }
+  return token;
+},
+session({ session, token }) {
+  if (session.user) {
+    session.user.id = token.id as string;
+    session.user.name = token.name as string;
+    session.user.email = token.email as string;
+    session.user.role = (token.role as string) || "";
+    console.log("Session role:", session.user.role); // যোগ করো
+  }
+  return session;
+},
   },
   pages: {
     signIn: "/login",

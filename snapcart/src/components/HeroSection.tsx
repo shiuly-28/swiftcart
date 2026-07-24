@@ -25,7 +25,7 @@ function HeroSection() {
     {
       id:1,
       icon:<Leaf className='w-20 h-20 sm:h-28 text-amber-500 drop-shadow-lg'/>,
-      title:"Fresh Organic fruits Gorceries", 
+      title:"Fresh Organic fruits Groceries", 
       Subtitle:"Farm-fresh fruits , vegetables, and daily essentials deliverd to you.",
       btnText:"Shop Now",
       bg:"https://i.postimg.cc/QNBF2pPy/Highcompressed-313610531-1024x576.jpg"
@@ -33,7 +33,7 @@ function HeroSection() {
     {
       id:2,
       icon:<Truck className='w-20 h-20 sm:h-28 text-amber-500 drop-shadow-lg'/>,
-      title:"Fresh Organic fruits Gorceries", 
+      title:"Fresh Organic fruits Groceries", 
       Subtitle:"Farm-fresh fruits , vegetables, and daily essentials deliverd to you.",
       btnText:"Shop Now",
       bg:"https://i.postimg.cc/pTZf9cyg/careem-quik.webp"
@@ -41,7 +41,7 @@ function HeroSection() {
     {
       id:3,
       icon:<Smartphone className='w-20 h-20 sm:h-28 text-amber-500 drop-shadow-lg'/>,
-      title:"Fresh Organic fruits Gorceries  ", 
+      title:"Fresh Organic fruits Groceries  ", 
       Subtitle:"Farm-fresh fruits , vegetables, and daily essentials deliverd to you.",
       btnText:"Shop Now",
       bg:"https://i.postimg.cc/wBBQcvVL/best-grocery-delivery-apps-for-fast-fresh-and-affordable-shopping-4L-1024x771.jpg"
