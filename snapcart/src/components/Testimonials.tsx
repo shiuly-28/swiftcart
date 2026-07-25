@@ -15,7 +15,7 @@ type Testimonial = {
 const TESTIMONIALS: Testimonial[] = [
   {
     id: "t1",
-    name: "Rafiq Ahmed",
+    name: "Israt Jahan",
     location: "Gulshan, Dhaka",
     rating: 5,
     quote:
@@ -33,7 +33,7 @@ const TESTIMONIALS: Testimonial[] = [
   },
   {
     id: "t3",
-    name: "Tanvir Hasan",
+    name: "Jasika",
     location: "Banani, Dhaka",
     rating: 4,
     quote:
