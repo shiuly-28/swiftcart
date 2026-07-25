@@ -20,7 +20,7 @@ const TESTIMONIALS: Testimonial[] = [
     rating: 5,
     quote:
       "Ran out of milk mid-recipe and honestly expected to just improvise. The doorbell rang before I'd finished chopping the onions. SwiftCart has genuinely changed how I plan meals — I don't stock up anymore, I just order when I need it.",
-    image: "https://res.cloudinary.com/dttzvtkoo/image/upload/v1785078078/images_10_tm5ijn.jpg",
+    image: "https://res.cloudinary.com/dttzvtkoo/image/upload/v1785079781/images_13_onrlkh.jpg",
   },
   {
     id: "t2",
