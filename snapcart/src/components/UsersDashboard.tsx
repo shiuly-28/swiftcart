@@ -5,6 +5,7 @@ import connectDb from '@/lib/db';
 import Grocery, { IGrocery } from '@/models/grocery.model';
 import GroceryItemCard from './GroceryItemCard';
 import { FolderOpen } from 'lucide-react';
+import Testimonials from './Testimonials';
 
 
 async function UsersDashboard ({groceryList}:{groceryList:IGrocery[]}) {
@@ -27,6 +28,7 @@ async function UsersDashboard ({groceryList}:{groceryList:IGrocery[]}) {
             </div>
             
            </div>
+           <Testimonials/>
         </>
     );
 };

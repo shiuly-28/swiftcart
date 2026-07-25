@@ -20,8 +20,7 @@ const TESTIMONIALS: Testimonial[] = [
     rating: 5,
     quote:
       "Ran out of milk mid-recipe and honestly expected to just improvise. The doorbell rang before I'd finished chopping the onions. SwiftCart has genuinely changed how I plan meals — I don't stock up anymore, I just order when I need it.",
-    image:
-      "https://res.cloudinary.com/dttzvtkoo/image/upload/v1785076509/images_9_yt2sfl.jpg",
+    image: "https://res.cloudinary.com/dttzvtkoo/image/upload/v1785078078/images_10_tm5ijn.jpg",
   },
   {
     id: "t2",
@@ -30,7 +29,7 @@ const TESTIMONIALS: Testimonial[] = [
     rating: 5,
     quote:
       "I've stopped keeping a backup grocery list entirely. If SwiftCart says ten minutes, it's ten minutes — even on a rainy Tuesday evening when every other app is running two hours late.",
-    image: "/testimonials/customer2.png",
+    image: "https://res.cloudinary.com/dttzvtkoo/image/upload/v1785078029/images_11_jkcqbv.jpg",
   },
   {
     id: "t3",
@@ -39,7 +38,7 @@ const TESTIMONIALS: Testimonial[] = [
     rating: 4,
     quote:
       "Ordered ice for a last-minute get-together, thinking it'd be a lost cause. It arrived still cold enough to matter. Small win, but that's really the whole pitch with this app.",
-    image: "/testimonials/customer3.png",
+    image: "https://res.cloudinary.com/dttzvtkoo/image/upload/v1785078230/images_12_nt1n5t.jpg",
   },
 ];
 
@@ -76,23 +75,24 @@ function TestimonialRow({
     >
       {/* Image */}
       <div className="relative w-full max-w-[280px] aspect-[4/5] shrink-0 rounded-3xl overflow-hidden border border-white/10">
-        <Image
-          src={t.image}
-          alt={t.name}
-          fill
-          className="object-cover"
-        />
+       <Image
+  src={t.image}
+  alt={t.name}
+  fill
+  unoptimized
+  className="object-cover"
+/>
       </div>
 
       {/* Text */}
       <div className="flex-1 text-center md:text-left">
         <StarRow rating={t.rating} />
-        <p className="text-gray-200 text-lg sm:text-xl leading-relaxed mt-4">
+        <p className="text-gray-800 text-lg sm:text-xl leading-relaxed mt-4">
           &ldquo;{t.quote}&rdquo;
         </p>
         <div className="mt-6">
-          <p className="text-white font-semibold">{t.name}</p>
-          <p className="text-gray-500 text-sm">{t.location}</p>
+          <p className=" font-semibold">{t.name}</p>
+          <p className="text-gray-800 text-sm">{t.location}</p>
         </div>
       </div>
     </div>
@@ -101,16 +101,16 @@ function TestimonialRow({
 
 export default function Testimonials() {
   return (
-    <section className="bg-black py-20 px-6">
+    <section className=" py-20 px-6">
       <div className="mx-auto max-w-5xl">
         <div className="text-center max-w-xl mx-auto mb-16">
           <span className="text-amber-500 text-xs font-semibold tracking-[0.2em]">
             LIVE FROM DHAKA
           </span>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-3">
+          <h2 className="text-3xl sm:text-4xl font-extrabold  mt-3">
             Every review starts with a clock.
           </h2>
-          <p className="text-gray-400 mt-3 text-base sm:text-lg">
+          <p className="text-gray-800 mt-3 text-base sm:text-lg">
             We ask every customer one question first: how long did it take?
             Here&apos;s what they said next.
           </p>
