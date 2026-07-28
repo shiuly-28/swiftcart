@@ -13,7 +13,6 @@ swiftcart/
 ├── snapcart/      # Next.js + TypeScript Client
 └── socketServer/  # Socket.IO Server
 ```
-
 ## ✨ Key Features
 
 - 🔐 Secure Authentication & Authorization
