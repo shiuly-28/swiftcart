@@ -57,15 +57,8 @@ function HeroSection() {
   },[])
   return (
     <div className='relative w-[98%] mx-auto mt-32 h-[80vh] rounded-3xl overflow-hidden shadow-2xl'>
-      <AnimatePresence mode='wait'>
-    <motion.div
-    key={current}
-    initial={{opacity:0}}
-    animate={{opacity:1}}
-    transition={{duration:0.8}}
-    exit={{opacity:0}}
-    className='absolute inset-0 bg-black/50 backdrop-blur-[1px]'
-    >
+     
+    
       <Image
       src={slides[current]?.bg}
       fill
@@ -73,30 +66,61 @@ function HeroSection() {
       priority
       className='object-cover'
       />
-    </motion.div>
-      </AnimatePresence>
-      <div className='absolute inset-0 flex items-center justify-center text-center text-white px-6'>
-        <motion.div
-        initial={{y:30, opacity:0}}
-        animate={{y:0, opacity:1}}
-        transition={{duration:0.6}}
-        className='flex flex-col items-center gap-6 max-w-3xl'
-        >
-          <div className='bg-white/10 backdrop-blur-md p-6 rounded-full shadow-lg'>{slides[current].icon}</div>
-          <h1 className='text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight drop-shadow-lg'>{slides[current].title}</h1>
-          <p className='text-lg sm:text-xl text-gray-200 max-w-2xl '>{slides[current].Subtitle}</p>
-          <motion.button 
-          whileHover={{scale:1.09}}
-          whileTap={{scale:0.96}}
-          transition={{duration:0.2}}
-          className='mt-4 bg-white text-amber-500 hover:text-amber-400 px-8 py-3 rounded-full font-semibold shadow-lg transition-all duration-300 flex items-center gap-2'
-          >
-            <ShoppingBag className='w-5 h-5'/>
-            {slides[current].btnText}
-          </motion.button>
-        </motion.div>
+    
+    
+     {/* 📌 কন্টেন্ট ডিভ - justify-end দিয়ে নিচে নামানো হয়েছে এবং pb-20 দিয়ে ডট থেকে একটু ওপরে রাখা হয়েছে */}
+<div className='absolute inset-0 flex flex-col justify-end items-center text-center text-white px-6 pb-20 sm:pb-24 z-10 pointer-events-none'>
+  
+  <div className='flex flex-col items-center gap-4 max-w-3xl pointer-events-auto'>
+    
+    {/* 🍃 আইকন */}
+    <div className='bg-white/10 backdrop-blur-md p-4 sm:p-5 rounded-full shadow-lg'>
+      <Leaf className='w-12 h-12 sm:w-16 sm:h-16 text-amber-500 drop-shadow-lg' />
+    </div>
 
-      </div>
+    {/* 🏷️ টাইটেল ও সাবটাইটেল */}
+    <h1 className='text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight drop-shadow-lg'>
+      Fresh Organic Fruits & Groceries
+    </h1>
+    <p className='text-sm sm:text-lg text-gray-200 max-w-2xl'>
+      Farm-fresh fruits, vegetables, and daily essentials delivered to you.
+    </p>
+
+    {/* 🛍️ বাটন - যা এখন একদম ডট ইন্ডিকেটরের ওপরে পারফেক্ট পজিশনে থাকবে */}
+    <motion.button 
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      className="relative inline-flex items-center px-8 py-3 mt-2 overflow-hidden text-base font-semibold text-amber-500 bg-white rounded-full shadow-lg cursor-pointer group/btn transition-all duration-300 hover:text-white"
+    >
+      {/* Aurora Hover Fill Layer */}
+      <span className="absolute left-0 block w-full h-0 transition-all bg-gradient-to-r from-amber-500 to-amber-600 opacity-100 group-hover/btn:h-full top-1/2 group-hover/btn:top-0 duration-400 ease" />
+
+      {/* Arrow Slide */}
+      <span className="absolute right-3 flex items-center justify-center w-8 h-8 duration-300 transform translate-x-full opacity-0 group-hover/btn:translate-x-0 group-hover/btn:opacity-100 ease">
+        <svg
+          className="w-5 h-5 text-white"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M14 5l7 7m0 0l-7 7m7-7H3"
+          />
+        </svg>
+      </span>
+
+      {/* Text & Icon Content */}
+      <span className="relative z-10 flex items-center gap-2 group-hover/btn:pr-6 transition-all duration-400">
+        <ShoppingBag className="w-5 h-5" />
+        {slides[current].btnText}
+      </span>
+    </motion.button>
+
+  </div>
+</div>
       <div className='absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3'>
         {
           slides.map((_, index)=>(
