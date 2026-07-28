@@ -1,4 +1,4 @@
-# 🛒 SwiftPick - Grocery Delivery Platform
+# 🛒 Swiftcart - Grocery Delivery Platform
 
 A modern full-stack grocery delivery platform built with **Next.js**, **TypeScript**, **MongoDB**, **Socket.IO**, and **Stripe**. The platform provides a seamless shopping experience with secure authentication, real-time order updates, and role-based dashboards.
 
