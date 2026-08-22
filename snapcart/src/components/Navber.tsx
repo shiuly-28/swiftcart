@@ -11,8 +11,6 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { useRouter } from 'next/navigation';
 
-
-
 interface IUser{
     _id:string
     name:string

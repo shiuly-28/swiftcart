@@ -76,21 +76,21 @@ const RegisterFrom = ({previousStep}:propType) => {
       }}className='flex flex-col gap-5 w-full max-w-sm'>
         <div className='relative'>
         <User className='absolute left-3 top-3.5 text-gray-400 w-s h-s hover:text-gray-400 '/>
-        <input type="text" placeholder='Your Name' className='w-full border border-gray-300 rounded-xl py-3 pl-10 pr-4 text-gray-800 focus:ring-2 focus:ring-green-500 focus:outline-none' 
+        <input type="text" placeholder='Your Name' className='w-full border border-gray-300 rounded-xl py-3 pl-10 pr-4 text-gray-800 focus:ring-2 focus:ring-orange-500 focus:outline-none' 
         onChange={(e)=>setName(e.target.value)}
         value={name}
         />
         </div>
         <div className='relative'>
         <Mail className='absolute left-3 top-3.5 text-gray-400 w-s h-s hover:text-gray-400 '/>
-        <input type="text" placeholder='Your Email' className='w-full border border-gray-300 rounded-xl py-3 pl-10 pr-4 text-gray-800 focus:ring-2 focus:text-orange-500 focus:outline-none' 
+        <input type="text" placeholder='Your Email' className='w-full border border-gray-300 rounded-xl py-3 pl-10 pr-4 text-gray-800 focus:ring-2 focus:ring-orange-500 focus:outline-none' 
         onChange={(e)=>setEmail(e.target.value)}
         value={email}
         />
         </div>
         <div className='relative'>
         <Lock className='absolute left-3 top-3.5 text-gray-400 w-s h-s hover:text-gray-400 '/>
-        <input type={showPassword?"text":"password"} placeholder='Your password' className='w-full border border-gray-300 rounded-xl py-3 pl-10 pr-4 text-gray-800 focus:ring-2 focus:text-orange-500 focus:outline-none' 
+        <input type={showPassword?"text":"password"} placeholder='Your password' className='w-full border border-gray-300 rounded-xl py-3 pl-10 pr-4 text-gray-800 focus:ring-2 focus:ring-orange-500 focus:outline-none' 
         onChange={(e)=>setPassword(e.target.value)}
         value={password}
         />
