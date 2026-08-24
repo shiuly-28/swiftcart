@@ -51,5 +51,8 @@ const grocerySchema=new mongoose.Schema<IGrocery>({
  timestamps:true
    
 })
+
+grocerySchema.index({ name: 1 })   
+
 const Grocery=mongoose.models.Grocery || mongoose.model("Grocery", grocerySchema)
 export default Grocery

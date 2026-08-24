@@ -77,8 +77,8 @@ const Login = () => {
             className='text-4xl font-extrabold text-orange-600 mb-2'>
                 Welcome back
             </motion.h1>
-            <p className='flex text-gray-500 mt-5 items-center'>Login To Snapcart Today
-                 Today <Leaf className='w-5 h-5 text-orange-600'/></p>
+            <p className='flex text-gray-500 mt-5 items-center'>Login To SwiftPick Today
+              <Leaf className='w-5 h-5 text-orange-600'/></p>
                  <motion.form 
                 onSubmit={handleLogin}
                   initial={{

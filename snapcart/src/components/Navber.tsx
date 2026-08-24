@@ -96,7 +96,7 @@ function Navber({user}:{user:IUser}) {
   return (
     <div className='w-[95%] fixed top-4 left-1/2 -translate-x-1/2 bg-linear-to-r from-orange-300 to-orange-500 rounded-2xl shadow-lg shadow-black/30 flex justify-between items-center h-20 px-4 md:px z-50'> 
       <Link href={"/"} className='text-white font-extrabold text-2xl sm:text-3xl tracking-wide hover:scale-105 transitions-transform'>
-      swiftcart
+      SwiftPick
       </Link>
       {user.role=="user" &&  <form className='hidden md:flex items-center bg-white rounded-full px-4 py-2 max-w-lg shadow-md ml-auto border
        border-gray-100' onSubmit={handleSearch}>
@@ -205,11 +205,18 @@ function Navber({user}:{user:IUser}) {
 
         >
           <Search className='text-gray-500 w-5 h-5 mr-2'/>
-          <form className='grow' onSubmit={handleSearch}>
-            <input type="text" className='w-full outline-none text-gray-600'
-              placeholder='search groceries...' value={search}
-               onChange={(e)=>setSearch(e.target.value)}/>
-          </form>
+          <form className='hidden md:flex items-center bg-white rounded-full px-4 py-2 max-w-lg shadow-md ml-auto border border-gray-100' onSubmit={handleSearch}>
+  <button type="submit" className='mr-2'>
+    <Search className='text-gray-500 w-5 h-5'/>
+  </button>
+  <input 
+    type="text" 
+    placeholder='Search groceries...' 
+    className='w-full outline-none text-sm' 
+    value={search}
+    onChange={(e)=>setSearch(e.target.value)}
+  />
+</form>
           <button onClick={()=>setMenuOpen(false)}>
             <X className='text-gray-500 w-5 h-5'/>
           </button>

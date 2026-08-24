@@ -186,7 +186,7 @@ if(!activeOrder && assignments.length===0){
   ]
   return(
     <div className='flex items-center justify-center min-h-screen bg-linear-to-br from-white
-    to-amber-50 p-6 mt-10'>
+    to-amber-50 p-4 mt-12'>
       <div className='max-w-md w-full text-center'>
         <h2 className='text-2xl font-bold text-gray-500'>No Active Deliveries🏬</h2>
         <p className='text-gray-500 mb-5'>Stay online to receive new orders</p>
@@ -200,7 +200,7 @@ if(!activeOrder && assignments.length===0){
                         <YAxis/>
                         <Tooltip />
                         <Legend/>
-                        <Bar dataKey="earnings" name="Earning"/>
+                        <Bar dataKey="earning" name="Earning"/>
                         <Bar dataKey="deliveries" name="Deliveries"/>
                     </BarChart>
                   </ResponsiveContainer>

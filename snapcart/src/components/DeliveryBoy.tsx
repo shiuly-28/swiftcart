@@ -13,7 +13,9 @@ async function DeliveryBoy() {
     deliveryOtpVerification: true
   })
   const today=new Date().toDateString()
-  const todayOrders=orders.filter((o)=>new Date(o.delivereAt).toDateString()===today).length
+  const todayOrders = orders.filter(
+  (o) => new Date(o.deliveredAt).toDateString() === today   // ✅ ঠিক বানান
+).length
   const todaysEarning=todayOrders * 40
 
   return (
