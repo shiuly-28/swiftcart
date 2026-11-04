@@ -44,4 +44,4 @@ const eslintConfig = defineConfig([
   ]),
 ]);
 
-export default eslintConfig; // এখানে শেষে বাড়তি 'r' থাকবে না
+export default eslintConfig;
